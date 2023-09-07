@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { getProjects } from "../helpers/projectsApi";
-import Article from "../styled/Article";
-import Loading from "./Loading";
-import { Title2, Title3 } from "../styled/Titles";
-import { ProjectPicture } from "../styled/Pictures";
-import { SimpleP } from "../styled/Paragraphs";
-import { Tag } from "../styled/Spans";
-import Link from "../styled/Link";
+import { useEffect, useState } from 'react';
+import { getProjects } from '../helpers/projectsApi';
+import Article from '../styled/Article';
+import Loading from './Loading';
+import { Title2, Title3 } from '../styled/Titles';
+import { ProjectPicture } from '../styled/Pictures';
+import { SimpleP } from '../styled/Paragraphs';
+import { Tag } from '../styled/Spans';
+import Link from '../styled/Link';
 
 const ProjectsComponent = () => {
   const [projects, setProjects] = useState([]);
@@ -18,6 +18,8 @@ const ProjectsComponent = () => {
 
   useEffect(() => {}, [projects]);
 
+  const API_BASE = process.env.REACT_APP_BASE_URL;
+
   if (!projects || projects.length === 0) {
     return (
       <Article>
@@ -27,7 +29,8 @@ const ProjectsComponent = () => {
   }
 
   return (
-    projects.map((project) =>
+    projects.map((project) => {
+      return (
       <Article
         key={project.id}
         $width={ '45%' }
@@ -47,14 +50,7 @@ const ProjectsComponent = () => {
           $textAlign={ 'center' }
         >
           <ProjectPicture
-            src={
-              (project.snapshot && project.snapshot !== '')
-              ?
-              project.snapshot
-              :
-              'https://via.placeholder.com/300x200'
-            }
-            $width={ '300px' }
+            src={ `${API_BASE}/images/${project.snapshot}` }
           />
         </Article>
 
@@ -141,7 +137,7 @@ const ProjectsComponent = () => {
           }
         </Article>
       </Article>
-    )
+    )})
   );
 };
 
