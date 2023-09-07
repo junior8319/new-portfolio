@@ -4,6 +4,7 @@ export const FormDiv100 = styled.div`
   border: none;
   padding: ${ props => props.$padding || '5px' };
   margin: ${ props => props.$margin };
+  height: ${ props => props.$height };
   border-radius: 10px;
   width: 95%;
   background-color: transparent;
