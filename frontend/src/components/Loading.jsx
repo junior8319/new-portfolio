@@ -34,12 +34,12 @@ const Loading = (props) => {
 
   return (
     <StyledLoading
-      marginTop={ marginTop }
-      height={ height }
-      width={ width }
-      border={ border }
-      marginBottom={ marginBottom }
-      fontSize={ fontSize }
+      $marginTop={ marginTop }
+      $height={ height }
+      $width={ width }
+      $border={ border }
+      $marginBottom={ marginBottom }
+      $fontSize={ fontSize }
     >
       { loadingText }
       <BiggerLetter>
