@@ -61,7 +61,7 @@ export const CancelButton = styled.input`
   padding: 10px;
   border-radius: 10px;
   width: 150px;
-  background-color: #89250f60;
+  background-color: #89250f;
   color: #e1dbdb90;
   
   &:hover {

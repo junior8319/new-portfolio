@@ -4,12 +4,16 @@ export const StyledLoading = styled.div`
   font-size: ${props => props.$fontSize || '32px' };
   border: ${props => props.$border || ''};;
   text-align: center;
-  margin-top: ${props => props.$marginTop || '35vh'};
-  margin-bottom: ${props => props.$marginBottom || ''};
-  height: ${props => props.$height || ''};
+  margin-top: ${props => props.$marginTop || 'auto'};
+  margin-bottom: ${props => props.$marginBottom || 'auto'};
+  height: ${props => props.$height || '60px'};
   color: #000;
   animation: colorChange 2.90s infinite;
   background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 
   @keyframes colorChange {
     10% {
@@ -47,7 +51,8 @@ export const StyledLoading = styled.div`
 
 export const BiggerLetter = styled.span`
   font-size: ${props => props.$fontSize || '52px'};
-  margin: 0;
+  margin: 5px;
   color: #371a0b;
   background-color: transparent;
+  align-self: center;
 `;

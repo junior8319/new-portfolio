@@ -269,14 +269,17 @@ const ContactMe = () => {
 
               {isSending
                 ?
-                <FormDiv100>
+                <FormDiv100
+                  // $height={'100px'}
+                >
                   <Loading
                     word={'Enviando...'}
-                    marginTop={'10px'}
-                    marginBottom={'10px'}
-                    height={'60px'}
-                    width={'90%'}
-                    fontSize={'24px'} />
+                    $marginTop={'0'}
+                    $marginBottom={'5px'}
+                    $height={'30px'}
+                    $width={'95%'}
+                    $fontSize={'24px'}
+                  />
                 </FormDiv100>
                 :
                 <SaveButton

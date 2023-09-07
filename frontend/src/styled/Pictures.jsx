@@ -44,6 +44,7 @@ export const CardPicture = styled.img`
 
 export const ProjectPicture = styled.img`
   border-radius: 5px;
+  max-height: ${props => props.$maxHeight || '300px'};
   max-width: 500px;
   width: 100%;
   margin: 0 auto;
