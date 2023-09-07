@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const NavLink = styled.a`
-  color: ${props => props.$color || "#853935"};
+  color: ${props => props.$color || "#949abe"};
   text-decoration: none;
   background: none;
   margin: 0;
