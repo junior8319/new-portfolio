@@ -56,7 +56,7 @@ const Container = styled.section`
   top: 55px;
   border-radius: 10px;
   display: flex;
-  flex-wrap: ${props => props.$flexWrap || 'wrap'};
+  flex-wrap: ${props => props.$flexWrap || ''};
   margin: 0 auto;
   max-height: ${props => props.$maxHeight || '95%'};
 
