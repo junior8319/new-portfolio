@@ -6,7 +6,6 @@ import { Title1 } from '../styled/Titles';
 const Welcome = () => {
   return (
     <Article
-      $margin={ "10px auto" }
       $maxHeight={ "fit-content" }
     >
       <Title1>Boas vindas ao meu portfólio,</Title1>
