@@ -11,12 +11,14 @@ const Projects = () => {
       <NavBar />
       <Container>
         <Article
-          width={ '90%' }
+          $width={ '100%' }
           $backgroundColor={ 'transparent' }
         >
           <Title1>Meus Projetos</Title1>
         </Article>
+      </Container>
 
+      <Container>
         <ProjectsComponent />
       </Container>
     </>
