@@ -9,6 +9,7 @@ export const NormalPicture = styled.img`
   top: 0;
   right: 0;
   box-shadow: 0 0 10px rgba(0, 0, 100, 0.5);
+  margin: 10px;
 
   @media (max-width: 1100px) {
     max-width: 125px;
@@ -19,7 +20,7 @@ export const NormalPicture = styled.img`
     justify-self: center;
     text-align: center;
     align-self: center;
-    margin: auto;
+    margin: 10px auto;
     width: 100%;
     height: auto;
   }

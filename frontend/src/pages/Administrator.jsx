@@ -13,8 +13,11 @@ const Administrator = () => {
   return (
     <>
       <NavBar />
-      <Container>
-          <Title1>Administrador</Title1>
+      <Container
+        $flexWrap="wrap"
+      >
+        <Title1>Administrador</Title1>
+
         <Article
           $maxHeight="fit-content"
           $margin="5px auto"

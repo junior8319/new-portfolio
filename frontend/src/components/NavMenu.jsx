@@ -12,11 +12,11 @@ const NavMenu = ({ handleMenuBtnClick }) => {
           Fechar
         </NavMenuButton>
       </InnerContent>
-      <Link to="/">Home</Link>
-      <Link to="/contact-me">Contato</Link>
-      <Link to="/articles">Artigos</Link>
-      <Link to="/projects">Projetos</Link>
-      <Link to="/administrator">Administrador</Link>
+      <Link to="/" onClick={ handleMenuBtnClick }>Home</Link>
+      <Link to="/contact-me" onClick={ handleMenuBtnClick }>Contato</Link>
+      <Link to="/articles" onClick={ handleMenuBtnClick }>Artigos</Link>
+      <Link to="/projects" onClick={ handleMenuBtnClick }>Projetos</Link>
+      <Link to="/administrator" onClick={ handleMenuBtnClick }>Administrador</Link>
     </NavBarMenu>
   );
 };
