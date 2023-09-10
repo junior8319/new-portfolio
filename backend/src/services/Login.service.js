@@ -1,4 +1,5 @@
 const { Login } = require('../database/models');
+const { generateToken } = require('../helpers/jsonWebToken');
 
 const getUsers = async () => {
   const users = await Login.findAll();
@@ -38,6 +39,23 @@ const userExists = async (name) => {
   }
 
   return true;
+};
+
+const getToken = async (user) => {
+  const userData = await getUserByName(user.userName);
+
+  if (!userData) return null;
+  console.log(userData);
+
+  const token = await generateToken({
+    id: userData.id,
+    userName: userData.userName,
+    role: userData.role,
+  });
+
+  if (!token) return null;
+
+  return { user: userData, token };
 };
 
 const createUser = async (user) => {
@@ -85,6 +103,7 @@ module.exports = {
   getUsers,
   getUserById,
   getUserByName,
+  getToken,
   createUser,
   updateUser,
   deleteUser,
