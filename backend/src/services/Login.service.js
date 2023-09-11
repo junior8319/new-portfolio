@@ -1,5 +1,6 @@
 const { Login } = require('../database/models');
 const { generateToken } = require('../helpers/jsonWebToken');
+const bCrypt = require('bcrypt');
 
 const getUsers = async () => {
   const users = await Login.findAll();
@@ -99,6 +100,26 @@ const deleteUser = async (id) => {
   return deletedUser;
 };
 
+const login = async (userName, password) => {
+  const user = await getUserByName(userName);
+
+  if (!user) return null;
+
+  const match = await bCrypt.compare(password, user.password);
+
+  if (!match || !password || password.length === 0) return null;
+
+  const token = await generateToken({
+    id: user.id,
+    userName: user.userName,
+    role: user.role,
+  });
+
+  if (!token) return null;
+
+  return { user, token };
+}
+
 module.exports = {
   getUsers,
   getUserById,
@@ -107,4 +128,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  login,
 };
