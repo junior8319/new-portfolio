@@ -9,7 +9,6 @@ const secretKey = fs.readFileSync('jwt.evaluation.key', 'utf8', (err, data) => {
 
 const generateToken = async (user) => {
   const token = await jwt.sign(user, secretKey, { expiresIn: '24h' });
-  console.log(token);
 
   return token;
 };
