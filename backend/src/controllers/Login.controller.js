@@ -104,7 +104,7 @@ const login = async (req, res) => {
         message: 'Invalid fields',
       });
     }
-    return res.status(200).json({ token });
+    return res.status(200).json(token);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: 'Internal server error' });
