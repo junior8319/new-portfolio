@@ -117,7 +117,11 @@ const login = async (userName, password) => {
 
   if (!token) return null;
 
-  return { user, token };
+  delete user.password;
+  
+  const data = { userData: user, tokenData: token };
+
+  return data;
 }
 
 module.exports = {
