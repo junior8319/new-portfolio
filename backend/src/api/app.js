@@ -7,6 +7,7 @@ const {
   stacksRouter,
   projectsRouter,
   stacksProjectsRouter,
+  loginRouter,
 } = require('../routes/index.routes');
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cors()); // allow all origins
 app.use('/stacks', stacksRouter);
 app.use('/projects', projectsRouter);
 app.use('/stacks-projects', stacksProjectsRouter);
+app.use('/users', loginRouter);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
