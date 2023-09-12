@@ -3,7 +3,9 @@ const { generateToken } = require('../helpers/jsonWebToken');
 const bCrypt = require('bcrypt');
 
 const getUsers = async () => {
-  const users = await Login.findAll();
+  const users = await Login.findAll({
+    attributes: { exclude: ['password'] },
+  });
 
   if (!users) {
     return null;
@@ -13,7 +15,12 @@ const getUsers = async () => {
 };
 
 const getUserById = async (id) => {
-  const user = await Login.findByPk(id);
+  const user = await Login.findByPk(
+    id,
+    {
+      attributes: { exclude: ['password'] },
+    }
+  );
 
   if (!user) {
     return null;
@@ -46,7 +53,6 @@ const getToken = async (user) => {
   const userData = await getUserByName(user.userName);
 
   if (!userData) return null;
-  console.log(userData);
 
   const token = await generateToken({
     id: userData.id,
@@ -66,17 +72,35 @@ const createUser = async (user) => {
     return null;
   }
 
+  const encryptedPassword = await bCrypt.hash(user.password, 10);
+  user.password = encryptedPassword;
+
   const newUser = await Login.create(user);
   if (!newUser) {
     return null;
   }
 
-  return newUser.dataValues;
+  const token = await generateToken({
+    id: newUser.id,
+    userName: newUser.userName,
+    role: newUser.role,
+  });
+
+  delete newUser.dataValues.password;
+
+  return { user: newUser.dataValues, token };
 };
 
 const updateUser = async (id, user) => {
   const userToUpdate = await getUserById(id);
+  let encryptedPassword = ''; 
+  
   if (!userToUpdate) return null;
+
+  if (user.password) {
+    encryptedPassword = await bCrypt.hash(user.password, 10);
+    user.password = encryptedPassword;
+  }
 
   const updatedUser = await Login.update(user, { where: { id: id } });
 
@@ -119,7 +143,7 @@ const login = async (userName, password) => {
 
   delete user.password;
   
-  const data = { userData: user, tokenData: token };
+  const data = { userData: user, token };
 
   return data;
 }
