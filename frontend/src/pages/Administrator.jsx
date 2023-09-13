@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import StacksForm from '../components/forms/StacksForm';
 import NavBar from '../components/NavBar';
 import StacksTable from '../components/tables/StacksTable';
@@ -8,8 +8,16 @@ import { Title1, Title2 } from '../styled/Titles';
 import ProjectsForm from '../components/forms/ProjectsForm';
 import ProjectsProvider from '../context/ProjectsProvider';
 import ProjectsTable from '../components/tables/ProjectsTable';
+import { LoginContext } from '../context/Contexts';
+import LoginForm from '../components/forms/LoginForm';
 
 const Administrator = () => {
+  const { isLogged } = useContext(LoginContext);
+
+  if (!isLogged) {
+    return <LoginForm />;
+  }
+
   return (
     <>
       <NavBar />
