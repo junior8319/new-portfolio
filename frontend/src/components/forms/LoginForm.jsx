@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { FormContainer, FormDiv100 } from "../../styled/Form";
 import { Input } from "../../styled/Inputs";
 import { Label } from "../../styled/Labels";
@@ -8,13 +8,7 @@ import { requestLogin } from "../../helpers/loginApi";
 import { LoginContext } from "../../context/Contexts";
 
 const LoginForm = () => {
-  const blankForm = {
-    userName: '',
-    password: '',
-  };
-
-  const [user, setUser] = useState(blankForm);
-  const { setIsLogged } = useContext(LoginContext);
+  const { setIsLogged, user, setUser } = useContext(LoginContext);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -27,7 +21,6 @@ const LoginForm = () => {
 
     if (response) {
       console.log(response);
-      setUser(blankForm);
       setIsLogged(true);
       return response;
     }
@@ -35,17 +28,20 @@ const LoginForm = () => {
 
   const visitorLogin = async (event) => {
     event.preventDefault();
-    setUser({
+
+    const user = {
       userName: 'visitor',
       password: 'visitorSuper',
-    });
+    };
     
-    const response = await sendLoginRequest(event);
+    const response = await requestLogin(user);
 
     if (response) {
-      console.log(response);
-      setUser(blankForm);
-      setIsLogged(true);
+      if (response.userData) {
+        setIsLogged(true);
+        localStorage.setItem('user', JSON.stringify(response.userData));
+        localStorage.setItem('token', JSON.stringify(response.token));
+      }
       return response;
     }
   };
@@ -87,17 +83,20 @@ const LoginForm = () => {
           />
         </FormDiv100>
 
-        <SaveButton
-          type="button"
-          value='Entrar'
-          onClick={ sendLoginRequest }
-        />
+        <FormDiv100>
+          <SaveButton
+            type="button"
+            value='Entrar'
+            onClick={ sendLoginRequest }
+          />
 
-        <SaveButton
-          type="button"
-          value='Entrar como Visitante'
-          onClick={ visitorLogin }
-        />
+          <SaveButton
+            type="button"
+            value='Entrar como Visitante'
+            onClick={ visitorLogin }
+          />
+        </FormDiv100>
+
       </FormContainer>
     </>
   );
