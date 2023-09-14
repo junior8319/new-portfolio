@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import StacksForm from '../components/forms/StacksForm';
 import NavBar from '../components/NavBar';
 import StacksTable from '../components/tables/StacksTable';
@@ -8,13 +8,13 @@ import { Title1, Title2 } from '../styled/Titles';
 import ProjectsForm from '../components/forms/ProjectsForm';
 import ProjectsProvider from '../context/ProjectsProvider';
 import ProjectsTable from '../components/tables/ProjectsTable';
-import { LoginContext } from '../context/Contexts';
 import LoginForm from '../components/forms/LoginForm';
+import Logout from '../components/Logout';
 
 const Administrator = () => {
-  const { isLogged } = useContext(LoginContext);
+  const user = JSON.parse(localStorage.getItem('user'));
 
-  if (!isLogged) {
+  if (!user || user.userName.length === 0) {
     return <LoginForm />;
   }
 
@@ -24,6 +24,7 @@ const Administrator = () => {
       <Container
         $flexWrap="wrap"
       >
+        <Logout />
         <Title1>Administrador</Title1>
 
         <Article
