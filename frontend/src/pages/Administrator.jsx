@@ -10,11 +10,13 @@ import ProjectsProvider from '../context/ProjectsProvider';
 import ProjectsTable from '../components/tables/ProjectsTable';
 import LoginForm from '../components/forms/LoginForm';
 import Logout from '../components/Logout';
+import { useContext } from 'react';
+import { LoginContext } from '../context/Contexts';
 
 const Administrator = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { user, isLogged } = useContext(LoginContext);
 
-  if (!user || user.userName.length === 0) {
+  if (!user || user.userName.length === 0 || !isLogged) {
     return <LoginForm />;
   }
 
