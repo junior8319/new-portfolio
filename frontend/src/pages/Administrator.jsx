@@ -8,14 +8,25 @@ import { Title1, Title2 } from '../styled/Titles';
 import ProjectsForm from '../components/forms/ProjectsForm';
 import ProjectsProvider from '../context/ProjectsProvider';
 import ProjectsTable from '../components/tables/ProjectsTable';
+import LoginForm from '../components/forms/LoginForm';
+import Logout from '../components/Logout';
+import { useContext } from 'react';
+import { LoginContext } from '../context/Contexts';
 
 const Administrator = () => {
+  const { user, isLogged } = useContext(LoginContext);
+
+  if (!user || user.userName.length === 0 || !isLogged) {
+    return <LoginForm />;
+  }
+
   return (
     <>
       <NavBar />
       <Container
         $flexWrap="wrap"
       >
+        <Logout />
         <Title1>Administrador</Title1>
 
         <Article

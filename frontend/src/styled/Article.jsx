@@ -4,7 +4,7 @@ const Article = styled.article`
   width: ${ props => props.$width || '70%' };
   margin: ${ props => props.$margin || '10px' };
   max-height: ${ props => props.$maxHeight || '300px' };
-  padding: 10px;
+  padding: ${ props => props.$padding || '10px' };
   background-color: ${ props => props.$backgroundColor || '#ffffff15' };
   border-radius: 10px;
   flex-grow: 1;

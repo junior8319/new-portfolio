@@ -32,7 +32,7 @@ export const SaveButton = styled.input`
   font-size: 0.9rem;
   padding: 10px;
   border-radius: 10px;
-  width: 180px;
+  width: fit-content;
   background-color: #13890f;
   color: #e1dbdb;
   text-align: center;
@@ -44,12 +44,10 @@ export const SaveButton = styled.input`
 
   @media (max-width: 1100px) {
     font-size: 0.8rem;
-    width: 120px;
   }
 
   @media (max-width: 400px) {
     font-size: 0.7rem;
-    width: 90px;
   }
 `;
 
@@ -58,11 +56,12 @@ export const CancelButton = styled.input`
   text-align: center;
   font-weight: bold;
   font-size: 0.8rem;
-  padding: 10px;
-  border-radius: 10px;
-  width: 150px;
+  padding: ${props => props.$padding || '10px'};
+  border-radius: ${props => props.$borderRadius || '10px'};
+  width: ${props => props.$width || '150px'};
   background-color: #89250f;
   color: #e1dbdb90;
+  margin: ${props => props.$margin || '0'};
   
   &:hover {
     background-color: #89250f;
