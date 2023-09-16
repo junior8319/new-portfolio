@@ -20,28 +20,31 @@ const LoginForm = () => {
     const response = await requestLogin(user);
 
     if (response) {
-      console.log(response);
       setIsLogged(true);
+      localStorage.setItem('user', JSON.stringify(response.userData));
+      localStorage.setItem('token', JSON.stringify(response.token));
       return response;
     }
   };
 
-  const visitorLogin = async (event) => {
-    event.preventDefault();
-
+  const visitorLogin = async () => {
     const user = {
       userName: 'visitor',
       password: 'visitorSuper',
     };
     
-    const response = await requestLogin(user);
+    const promise = new Promise((resolve, reject) => {
+      resolve(requestLogin(user));
+    });
+    const response = promise.then((response) => {
+      localStorage.setItem('user', JSON.stringify(response.userData));
+      localStorage.setItem('token', JSON.stringify(response.token));
+      setIsLogged(true);
+      setUser(response.userData);
+      return response;
+    });
 
     if (response) {
-      if (response.userData) {
-        setIsLogged(true);
-        localStorage.setItem('user', JSON.stringify(response.userData));
-        localStorage.setItem('token', JSON.stringify(response.token));
-      }
       return response;
     }
   };
