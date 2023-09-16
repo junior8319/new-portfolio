@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StacksContext } from '../../context/Contexts';
+import { LoginContext, StacksContext } from '../../context/Contexts';
 import { getStacks, requestStackRegister, updateStackRequest } from '../../helpers/stacksApi';
 import { CancelButton, SaveButton } from '../../styled/Buttons';
 import { Input, TextArea } from '../../styled/Inputs';
@@ -16,6 +16,8 @@ const StacksForm = () => {
     setStacks,
     setStack,
   } = useContext(StacksContext);
+
+  const { isAdministrator } = useContext(LoginContext);
   
   const initialStack = ({
     title: '',
@@ -128,6 +130,10 @@ const StacksForm = () => {
                   type="button"
                   value="Salvar"
                   onClick={ () => {
+                    if (!isAdministrator) {
+                      alert('Você não tem permissão para cadastrar uma nova habilidade ou ferramenta.');
+                      return;
+                    };
                     requestStackRegister(stack)
                       .then((data) => {
                         setStacks([...stacks, data])
@@ -141,7 +147,15 @@ const StacksForm = () => {
                 <SaveButton
                   type="button"
                   value="Alterar"
-                  onClick={() => sendUpdateRequest(stack.id)}
+                  onClick={() => {
+                    if (!isAdministrator) {
+                      alert('Você não tem permissão para alterar uma habilidade ou ferramenta.');
+                      setStack(initialStack);
+                      stopUpdating();
+                      return;
+                    }
+                    sendUpdateRequest(stack.id)
+                  }}
                 />
                 
                 <CancelButton

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { StacksContext } from '../../context/Contexts';
+import { LoginContext, StacksContext } from '../../context/Contexts';
 import { deleteStackRequest, getStacks } from '../../helpers/stacksApi';
 import {
   Col,
@@ -18,6 +18,7 @@ import { Title3 } from '../../styled/Titles';
 
 const StacksTable = () => {
   const { mappedStacks, setIsUpdating, setStack, setStacks } = useContext(StacksContext);
+  const { isAdministrator } = useContext(LoginContext);
 
   const selectToUpdate = (tableStack) => {
     setIsUpdating(true);
@@ -101,12 +102,17 @@ const StacksTable = () => {
                         </ColUpdateBtn>
 
                         <ColDeleteBtn
-                          onClick={
-                            () => deleteStackRequest(tableStack.id)
+                          onClick={ () => {
+                            if (!isAdministrator) {
+                              return alert(
+                                'Você não tem permissão para excluir ferramentas'
+                              );
+                            }
+                            deleteStackRequest(tableStack.id)
                             .then(() => {
                               getStacks().then(response => setStacks(response));
                             })
-                          }
+                          }}
                         >
                           Excluir
                         </ColDeleteBtn>

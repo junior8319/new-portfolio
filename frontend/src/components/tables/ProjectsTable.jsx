@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ProjectsContext } from '../../context/Contexts';
+import { LoginContext, ProjectsContext } from '../../context/Contexts';
 import { Title3 } from '../../styled/Titles';
 import { Col, ColBtnDiv, ColDeleteBtn, ColUpdateBtn, HeadCol, Row, Table, TableBody, TableContainer, TableHead } from '../../styled/Table';
 import NavLink from '../../styled/Link';
@@ -13,6 +13,8 @@ const ProjectsTable = () => {
     setProject,
     setProjects,
   } = useContext(ProjectsContext);
+
+  const { isAdministrator } = useContext(LoginContext);
 
   const selectToUpdate = (tableProject) => {
     setIsUpdating(true);
@@ -83,6 +85,10 @@ const ProjectsTable = () => {
 
                     <ColDeleteBtn
                       onClick={() => {
+                        if (!isAdministrator) {
+                          return alert('Você não tem permissão para apagar projetos');
+                        };
+
                         const confirmDelete = window.confirm(
                           `Deseja deletar o projeto ${title}?`
                         );
