@@ -5,9 +5,11 @@ import { SimpleP } from "../styled/Paragraphs";
 import { CancelButton } from "../styled/Buttons";
 
 const Logout = () => {
-  const { user, setUser, setIsLogged, blankForm } = useContext(LoginContext);
+  const { setUser, setIsLogged, blankForm } = useContext(LoginContext);
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const logout = () => {
+    localStorage.clear();
     setUser(blankForm);
     setIsLogged(false);
   };
@@ -18,6 +20,7 @@ const Logout = () => {
         $justifyContent='flex-end'
         $width='100%'
         $padding='0'
+        $backgroundColor='transparent'
       >
         <SimpleP
           $textAlign='right'
