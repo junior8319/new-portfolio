@@ -3,7 +3,7 @@ import { Title2 } from '../../styled/Titles';
 import { Label } from '../../styled/Labels';
 import { Input, TextArea } from '../../styled/Inputs';
 import { CancelButton, SaveButton } from '../../styled/Buttons';
-import { ProjectsContext } from '../../context/Contexts';
+import { LoginContext, ProjectsContext } from '../../context/Contexts';
 import { FormContainer, FormDiv100, FormDiv25 } from '../../styled/Form';
 import { getProjects } from '../../helpers/projectsApi';
 
@@ -28,6 +28,8 @@ const ProjectsForm = () => {
     setIsUpdating,
     setProjects,
   } = useContext(ProjectsContext);
+
+  const { isAdministrator } = useContext(LoginContext);
 
   const handleChange  = (event) => {
     const { name, value } = event.target;
@@ -116,10 +118,14 @@ const ProjectsForm = () => {
         }),
       };
   
-      const registerResponse = await fetch(`http://localhost:3001/projects/${project.id}`, updateOptions);
+      const registerResponse = await fetch(
+        `http://localhost:3001/projects/${project.id}`,
+        updateOptions
+      );
       await registerResponse.json();
       return;
     }
+
 
     const updateOptions = {
       method: 'PUT',
@@ -154,7 +160,6 @@ const ProjectsForm = () => {
       <FormContainer
         method="post"
         encType="multipart/form-data"
-        onSubmit={ sendRegisterRequest }
       >
         <FormDiv25>
           <Label
@@ -258,16 +263,34 @@ const ProjectsForm = () => {
           ?
           (
             <SaveButton
-              type="submit"
+              type='button'
               value='Salvar'
+              onClick={ (event) => {
+                event.preventDefault();
+                if (!isAdministrator) {
+                  setProject(initialProject);
+                  return alert(
+                  'Você não tem permissão para cadastrar projetos!'
+                  );
+                }
+                sendRegisterRequest();
+              }}
             />
           )
           :
           (
             <SaveButton
-              type="submit"
+              type='button'
               value='Alterar'
-              onClick={ sendUpdateRequest }
+              onClick={() => {
+                if (!isAdministrator) {
+                  stopUpdating();
+                  return alert(
+                    'Você não tem permissão para alterar projetos!'
+                  );
+                }
+                sendUpdateRequest();
+              }}
             />
           )
         }
