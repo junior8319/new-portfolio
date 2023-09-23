@@ -49,6 +49,28 @@ export const NavBarMenu = styled.div`
   }
 `;
 
+export const LoginContainer = styled.article`
+background-color: ${props => props.$backGround};
+width: 50%;
+border-radius: 10px;
+border: 1px solid #037d1a40;
+margin: auto;
+margin-top: 25vh;
+margin-bottom: 25vh;
+max-height: ${props => props.$maxHeight || ''};
+padding: 40px;
+align-self: center;
+
+article:hover {
+  background-color: #037d1a40;
+  transition: 1s;
+}
+
+@media (max-width: 800px) {
+  flex-wrap: wrap;
+}
+`;
+
 const Container = styled.section`
   background-color: ${props => props.$backGround};
   width: 100%;
