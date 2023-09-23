@@ -4,6 +4,7 @@ import { Input } from "../../styled/Inputs";
 import { Label } from "../../styled/Labels";
 import { Title2 } from "../../styled/Titles";
 import { SaveButton } from "../../styled/Buttons";
+import { LoginContainer } from '../../styled/Container';
 import { requestLogin } from "../../helpers/loginApi";
 import { LoginContext } from "../../context/Contexts";
 
@@ -50,7 +51,7 @@ const LoginForm = () => {
   };
 
   return (
-    <>
+    <LoginContainer>
       <Title2>Login</Title2>
 
       <FormContainer>
@@ -101,7 +102,7 @@ const LoginForm = () => {
         </FormDiv100>
 
       </FormContainer>
-    </>
+    </LoginContainer>
   );
 };
 
