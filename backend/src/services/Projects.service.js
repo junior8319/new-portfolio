@@ -1,4 +1,5 @@
 const { Project, Stack } = require('../database/models');
+const stacksProjectsService = require('./StacksProjects.service');
 
 const getAllProjects = async () => {
   const projects = await Project.findAll({
@@ -53,7 +54,28 @@ const updateProject = async (id, project) => {
 };
 
 const deleteProject = async (id) => {
-  const projectToDelete = await getProjectById(id);
+  let projectToDelete = await getProjectById(id);
+  if (!projectToDelete) return null;
+
+  const stacksIds = projectToDelete.Stacks
+  .map(stack => stack.dataValues.id);
+
+  if (stacksIds.length && stacksIds.length > 0) {
+    if (stacksIds.length > 0) {
+      stacksIds.forEach(async (stackId) => {
+        
+        await stacksProjectsService
+        .deleteStackProject(
+          {
+            stackId,
+            projectId: id
+          }
+        );
+      });
+    }
+  }
+
+  projectToDelete = await getProjectById(id);
   if (!projectToDelete) return null;
 
   const deletedProject = await Project.destroy({ where: { id } });

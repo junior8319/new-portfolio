@@ -36,6 +36,13 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
+    const alreadyExists = await loginService.userExists(req.body.userName);
+    if (alreadyExists) return res
+    .status(403)
+    .json({
+      message: 'User already exists.',
+    });
+
     const newUser = await loginService.createUser(req.body);
     if (!newUser) {
       return res.status(400).json({

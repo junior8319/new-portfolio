@@ -66,12 +66,6 @@ const getToken = async (user) => {
 };
 
 const createUser = async (user) => {
-  const alreadyExists = await userExists(user.userName);
-
-  if (alreadyExists) {
-    return null;
-  }
-
   const encryptedPassword = await bCrypt.hash(user.password, 10);
   user.password = encryptedPassword;
 
@@ -152,6 +146,7 @@ module.exports = {
   getUsers,
   getUserById,
   getUserByName,
+  userExists,
   getToken,
   createUser,
   updateUser,
