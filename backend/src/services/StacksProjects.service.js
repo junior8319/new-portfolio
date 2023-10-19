@@ -11,12 +11,15 @@ const getAll = async () => {
 };
 
 const getStackProjectByPk = async ({ stackId, projectId }) => {
-  const stackProject = await StackProject.findByPk(Number(stackId), {
+  const stackProject = await StackProject.findOne({
     where: {
-      projectId: Number(projectId),
+      stack_id: Number(stackId),
+      project_id: Number(projectId),
     },
   });
+  
   if (!stackProject) return null;
+
 
   return stackProject.dataValues;
 };
@@ -71,8 +74,8 @@ const deleteStackProject = async (stackProject) => {
 
   const deletedStackProject = await StackProject.destroy({
     where: {
-      stackId: Number(stackId),
-      projectId: Number(projectId),
+      stack_id: Number(stackId),
+      project_id: Number(projectId),
     },
   });
 
