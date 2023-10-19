@@ -12,8 +12,8 @@ const generateToken = async (user) => {
   return token;
 };
 
-const verifyToken = async (token) => {
-  const decoded = await jwt.verify(token, secretKey);
+const verifyToken = (token) => {
+  const decoded = jwt.verify(token, secretKey);
 
   return decoded;
 };
