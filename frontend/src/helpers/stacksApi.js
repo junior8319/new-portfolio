@@ -36,10 +36,10 @@ const requestStackRegister = (receivedData) => {
       },
     };
     const response = fetch(`${API_URL}/stacks`, options)
-      .then(response => response.json())
-      .then(data => {
-        return data.stack;
-      });
+    .then(response => response.json())
+    .then(data => {
+      return data.stack;
+    });
     return response;
   } catch (error) {
     console.log(error);
