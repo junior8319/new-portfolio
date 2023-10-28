@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
 import { LoginContext } from './Contexts';
+import { requestGetUsers } from '../helpers/loginApi';
 
 const LoginProvider = ({ children }) => {
   const blankForm = {
     userName: '',
     password: '',
+    role: '',
   };
 
   const [user, setUser] = useState(blankForm);
+  const [registeringUser, setRegisteringUser] = useState(blankForm);
+  const [users, setUsers] = useState([]);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [isAdministrator, setIsAdministrator] = useState(false);
 
@@ -24,13 +29,28 @@ const LoginProvider = ({ children }) => {
       :
         setIsAdministrator(false);
     }
+
+    requestGetUsers()
+    .then((response) => {
+      setUsers(response);
+    })
+    .catch((error) => console.log(error));
   }, []);
+
+  let mappedUsers = users.map((user) => user);
 
   const contextValue = {
     isLogged,
     setIsLogged,
     user,
     setUser,
+    users,
+    setUsers,
+    mappedUsers,
+    isUpdating,
+    setIsUpdating,
+    registeringUser,
+    setRegisteringUser,
     blankForm,
     isAdministrator,
   }

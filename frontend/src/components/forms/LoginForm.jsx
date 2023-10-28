@@ -30,8 +30,8 @@ const LoginForm = () => {
 
   const visitorLogin = async () => {
     const user = {
-      userName: 'visitor',
-      password: 'visitorSuper',
+      userName: 'user',
+      password: 'userSuper',
     };
     
     const promise = new Promise((resolve, reject) => {

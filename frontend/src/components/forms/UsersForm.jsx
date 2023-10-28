@@ -2,17 +2,12 @@ import { useContext } from "react";
 import { FormContainer, FormDiv100 } from "../../styled/Form";
 import { Input, Select } from "../../styled/Inputs";
 import { Label } from "../../styled/Labels";
-import { Title2 } from "../../styled/Titles";
 import { LoginContext } from "../../context/Contexts";
-import { requestGetUsers } from "../../helpers/loginApi";
+import { requestCreateUser, requestGetUsers, requestUpdateUser } from "../../helpers/loginApi";
 import { CancelButton, SaveButton } from "../../styled/Buttons";
 
 const UsersForm = () => {
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
-  const API_ORIGIN = process.env.REACT_APP_BASE_URL_ORIGIN;
-
   const {
-    token,
     registeringUser,
     setRegisteringUser,
     isUpdating,
@@ -33,37 +28,32 @@ const UsersForm = () => {
   };
 
   const sendRegisterRequest = async () => {
-    console.log('registeringUser', JSON.stringify(registeringUser));
-    const registerOptions = {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': API_ORIGIN,
-        'Accept': 'application/json',
-        Authorization: token,
-      },
-      body: JSON.stringify(registeringUser),
-    };
-
-    const registerResponse = await fetch(
-      `${BASE_URL}/users/create`,
-      registerOptions
-    );
-
-    console.log('registerResponse', registerResponse);
-    // await registerResponse.json();
-    // console.log(registerResponse.json());
+    const token = localStorage.getItem('token');
+    await requestCreateUser(registeringUser, token);
 
     stopUpdating();
 
+    const users = await requestGetUsers();
+    setUsers(users);
+  };
+
+  const sendUpdateRequest = async (receivedId) => {
+    const token = localStorage.getItem('token');
+    const response = await requestUpdateUser(receivedId, registeringUser, token);
+    
     requestGetUsers()
-    .then((data) => setUsers(data));
+    .then((response) => {
+      setUsers(response);
+    })
+    .catch((error) => console.log(error));
+    
+    stopUpdating();
+    
+    return response;
   };
   
   return (
     <>
-      <Title2>Cadastro de Usuários(as)</Title2>
       <FormContainer action="POST">
         <FormDiv100>
           <Label htmlFor="input-name">
@@ -115,12 +105,12 @@ const UsersForm = () => {
             <SaveButton
               type="button"
               value='Salvar'
-              onClick={ (event) => {
-                event.preventDefault();
+              onClick={ () => {
                 if (!isAdministrator) {
-                  return alert(
+                  alert(
                     'Você não tem permissão para cadastrar usuários(as).'
                   );
+                  return;
                 }
                 sendRegisterRequest();
               }}
@@ -133,14 +123,14 @@ const UsersForm = () => {
               value="Alterar"
               onClick={ (event) => {
                 event.preventDefault();
-                console.log('isAdministrator', isAdministrator);
                 if (!isAdministrator) {
+                  alert(
+                    'Você não tem permissão para alterar um(a) usuário(a).'
+                    );
                   stopUpdating();
-                  return alert(
-                    'Você não tem permissão para alterar usuários(as).'
-                  );
+                  return;
                 }
-                sendRegisterRequest();
+                sendUpdateRequest(registeringUser.id);
               }}
             />
           )
