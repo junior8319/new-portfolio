@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{ useContext } from 'react';
 import StacksForm from '../components/forms/StacksForm';
 import NavBar from '../components/NavBar';
 import StacksTable from '../components/tables/StacksTable';
@@ -10,7 +10,6 @@ import ProjectsProvider from '../context/ProjectsProvider';
 import ProjectsTable from '../components/tables/ProjectsTable';
 import LoginForm from '../components/forms/LoginForm';
 import Logout from '../components/Logout';
-import { useContext } from 'react';
 import { LoginContext } from '../context/Contexts';
 import UsersForm from '../components/forms/UsersForm';
 import UsersTable from '../components/tables/UsersTable';

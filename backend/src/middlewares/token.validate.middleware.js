@@ -6,7 +6,9 @@ const tokenValidate = async (req, res, next) => {
     return res.status(401).json({ message: 'missing auth token' });
   }
   try {
+    console.log('token', token);
     const decoded = await verifyToken(token);
+    console.log('decoded', decoded);
     req.user = decoded;
     next();
   } catch (err) {

@@ -15,6 +15,13 @@ const LoginProvider = ({ children }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [isAdministrator, setIsAdministrator] = useState(false);
+  const [token, setToken] = useState('');
+
+  const getUsersFromApi = async () => {
+    const data = await requestGetUsers();
+    setUsers(data);
+    return data;
+  };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -22,6 +29,7 @@ const LoginProvider = ({ children }) => {
 
     if (user && token) {
       setUser(user);
+      setToken(token);
       setIsLogged(true);
       (user.role === 'owner')
       ?
@@ -40,19 +48,22 @@ const LoginProvider = ({ children }) => {
   let mappedUsers = users.map((user) => user);
 
   const contextValue = {
+    blankForm,
     isLogged,
     setIsLogged,
     user,
-    setUser,
     users,
+    registeringUser,
+    setUser,
     setUsers,
     mappedUsers,
     isUpdating,
     setIsUpdating,
-    registeringUser,
     setRegisteringUser,
-    blankForm,
     isAdministrator,
+    token,
+    setToken,
+    getUsersFromApi,
   }
   
   return (

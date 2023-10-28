@@ -87,7 +87,6 @@ const UsersForm = () => {
           <Label htmlFor="input-role">
             Função:
           </Label>
-
           <Select
             name="role"
             id="role"

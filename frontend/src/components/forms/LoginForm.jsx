@@ -24,6 +24,7 @@ const LoginForm = () => {
       setIsLogged(true);
       localStorage.setItem('user', JSON.stringify(response.userData));
       localStorage.setItem('token', JSON.stringify(response.token));
+      setUser(response.userData);
       return response;
     }
   };
