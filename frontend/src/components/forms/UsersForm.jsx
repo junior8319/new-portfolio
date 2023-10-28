@@ -87,13 +87,6 @@ const UsersForm = () => {
           <Label htmlFor="input-role">
             Função:
           </Label>
-
-          <Select
-            name="role"
-            id="role"
-            value={registeringUser.role}
-            onChange={handleChange}
-          >
           <Select
             name="role"
             id="role"
@@ -102,7 +95,6 @@ const UsersForm = () => {
           >
             <option value="owner">Administrador(a)</option>
             <option value="visitor">Visitante</option>
-          </Select>
           </Select>
         </FormDiv100>
 
