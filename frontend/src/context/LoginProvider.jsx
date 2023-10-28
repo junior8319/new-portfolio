@@ -6,6 +6,7 @@ const LoginProvider = ({ children }) => {
   const blankForm = {
     userName: '',
     password: '',
+    role: '',
   };
 
   const [user, setUser] = useState(blankForm);
