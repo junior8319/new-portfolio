@@ -90,6 +90,8 @@ const deleteStackProject = async (request, response) => {
       projectId: request.params.projectId,
     };
 
+    console.log('paramsToSearch', paramsToSearch);
+
     const stackProjectToDelete = await stacksProjectsService.getStackProjectByPk(paramsToSearch);
     if (!stackProjectToDelete) response
     .status(404)

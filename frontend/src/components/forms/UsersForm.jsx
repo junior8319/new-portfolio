@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useContext } from "react";
 import { FormContainer, FormDiv100 } from "../../styled/Form";
 import { Input, Select } from "../../styled/Inputs";
 import { Label } from "../../styled/Labels";
@@ -63,7 +64,11 @@ const UsersForm = () => {
           <Input
             id="input-name"
             name="userName"
+            name="userName"
             type="text"
+            value={registeringUser.userName}
+            onChange={handleChange}
+          />
             value={registeringUser.userName}
             onChange={handleChange}
           />
@@ -80,6 +85,8 @@ const UsersForm = () => {
             type="password"
             value={registeringUser.password}
             onChange={handleChange}
+            value={registeringUser.password}
+            onChange={handleChange}
           />
         </FormDiv100>
 
@@ -94,8 +101,15 @@ const UsersForm = () => {
             value={registeringUser.role}
             onChange={handleChange}
           >
+          <Select
+            name="role"
+            id="role"
+            value={registeringUser.role}
+            onChange={handleChange}
+          >
             <option value="owner">Administrador(a)</option>
             <option value="visitor">Visitante</option>
+          </Select>
           </Select>
         </FormDiv100>
 

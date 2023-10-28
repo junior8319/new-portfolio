@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Title2 } from '../../styled/Titles';
 import { Label } from '../../styled/Labels';
 import { Input, TextArea } from '../../styled/Inputs';
@@ -9,6 +9,7 @@ import { getProjects } from '../../helpers/projectsApi';
 
 const ProjectsForm = () => {
   const API_ORIGIN = process.env.REACT_APP_BASE_URL_ORIGIN;
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
 
   const initialProject = {
     title: '',
@@ -31,6 +32,8 @@ const ProjectsForm = () => {
 
   const { isAdministrator } = useContext(LoginContext);
 
+  useEffect(() => {}, [isAdministrator]);
+
   const handleChange  = (event) => {
     const { name, value } = event.target;
     setProject({ ...project, [name]: value });
@@ -40,9 +43,7 @@ const ProjectsForm = () => {
     setFile(event.target.files[0]);
   };
 
-  const sendRegisterRequest = async (event) => {
-    event.preventDefault();
-
+  const sendRegisterRequest = async () => {
     const formData = new FormData();
     formData.append('snapshot', file);
 
@@ -51,7 +52,7 @@ const ProjectsForm = () => {
       body: formData,
     };
 
-    const uploadResponse = await fetch('http://localhost:3001/upload', uploadOptions);
+    const uploadResponse = await fetch(`${BASE_URL}/upload`, uploadOptions);
     const data = await uploadResponse.json();
 
     if (data.error || !data.file || data.file.length === 0) {
@@ -74,7 +75,7 @@ const ProjectsForm = () => {
       }),
     };
 
-    const registerResponse = await fetch('http://localhost:3001/projects', registerOptions);
+    const registerResponse = await fetch(`${BASE_URL}/projects`, registerOptions);
     await registerResponse.json();
 
     stopUpdating();
@@ -83,9 +84,7 @@ const ProjectsForm = () => {
     .then(data => setProjects(data));
   };
 
-  const sendUpdateRequest = async (event) => {
-    event.preventDefault();
-
+  const sendUpdateRequest = async () => {
     if (file && file.name.length > 0) {
       const formData = new FormData();
       formData.append('snapshot', file);
@@ -95,7 +94,7 @@ const ProjectsForm = () => {
         body: formData,
       };
 
-      const uploadResponse = await fetch('http://localhost:3001/upload', uploadOptions);
+      const uploadResponse = await fetch(`${BASE_URL}/upload`, uploadOptions);
       const data = await uploadResponse.json();
 
       if (data.error || !data.file || data.file.length === 0) {
@@ -119,7 +118,7 @@ const ProjectsForm = () => {
       };
   
       const registerResponse = await fetch(
-        `http://localhost:3001/projects/${project.id}`,
+        `${BASE_URL}/projects/${project.id}`,
         updateOptions
       );
       await registerResponse.json();
@@ -137,7 +136,7 @@ const ProjectsForm = () => {
       body: JSON.stringify(project),
     };
 
-    const registerResponse = await fetch(`http://localhost:3001/projects/${project.id}`, updateOptions);
+    const registerResponse = await fetch(`${BASE_URL}/${project.id}`, updateOptions);
     await registerResponse.json();
 
     stopUpdating();
@@ -282,7 +281,8 @@ const ProjectsForm = () => {
             <SaveButton
               type='button'
               value='Alterar'
-              onClick={() => {
+              onClick={ (event) => {
+                event.preventDefault();
                 if (!isAdministrator) {
                   stopUpdating();
                   return alert(
@@ -294,7 +294,6 @@ const ProjectsForm = () => {
             />
           )
         }
-
 
         {
           isUpdating
