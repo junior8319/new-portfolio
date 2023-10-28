@@ -3,7 +3,7 @@ import { FormContainer, FormDiv100 } from "../../styled/Form";
 import { Input, Select } from "../../styled/Inputs";
 import { Label } from "../../styled/Labels";
 import { LoginContext } from "../../context/Contexts";
-import { requestCreateUser, requestGetUsers } from "../../helpers/loginApi";
+import { requestCreateUser, requestGetUsers, requestUpdateUser } from "../../helpers/loginApi";
 import { CancelButton, SaveButton } from "../../styled/Buttons";
 
 const UsersForm = () => {
@@ -35,6 +35,21 @@ const UsersForm = () => {
 
     const users = await requestGetUsers();
     setUsers(users);
+  };
+
+  const sendUpdateRequest = async (receivedId) => {
+    const token = localStorage.getItem('token');
+    const response = await requestUpdateUser(receivedId, registeringUser, token);
+    
+    requestGetUsers()
+    .then((response) => {
+      setUsers(response);
+    })
+    .catch((error) => console.log(error));
+    
+    stopUpdating();
+    
+    return response;
   };
   
   return (
@@ -109,12 +124,13 @@ const UsersForm = () => {
               onClick={ (event) => {
                 event.preventDefault();
                 if (!isAdministrator) {
+                  alert(
+                    'Você não tem permissão para alterar um(a) usuário(a).'
+                    );
                   stopUpdating();
-                  return alert(
-                    'Você não tem permissão para alterar usuários(as).'
-                  );
+                  return;
                 }
-                sendRegisterRequest();
+                sendUpdateRequest(registeringUser.id);
               }}
             />
           )
