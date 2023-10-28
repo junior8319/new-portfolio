@@ -18,7 +18,7 @@ import { requestDeleteUser, requestGetUsers } from '../../helpers/loginApi';
 const UsersTable = () => {
   const {
     mappedUsers,
-    setUser,
+    setRegisteringUser,
     setUsers,
     setIsUpdating,
     isAdministrator
@@ -27,7 +27,7 @@ const UsersTable = () => {
   const selectToUpdate = (tableUser) => {
     setIsUpdating(true);
 
-    setUser({
+    setRegisteringUser({
       id: tableUser.id,
       userName: tableUser.userName,
       role: tableUser.role,
