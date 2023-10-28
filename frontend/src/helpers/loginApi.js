@@ -50,6 +50,28 @@ const requestGetUsers = async () => {
   }
 };
 
+const requestGetUserById = async (receivedId) => {
+  try {
+    const options = {
+      method:'GET',
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin': API_ORIGIN,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }, 
+    };
+
+    const user = await fetch(`${API_URL}/users/${receivedId}`, options);
+    const jsonUser = await user.json();    
+
+    return jsonUser;
+  } catch (error) {
+    console.log(error);
+    return new Error(`Something went wrong. Error: ${error}`);
+  }
+};
+
 const requestCreateUser = async (receivedUser, receivedCredentials) => {
   try {
     const userToRegister = {
@@ -84,6 +106,39 @@ const requestCreateUser = async (receivedUser, receivedCredentials) => {
   }
 };
 
+const requestUpdateUser = async (receivedId, receivedUser, receivedCredentials) => {
+  try {
+    let userToUpdate = await requestGetUserById(receivedId);
+    if (!userToUpdate) {
+      return `Não foi possível encontrar registro com o ID: ${receivedId}`;
+    }
+    userToUpdate = {
+      ...userToUpdate,
+      ...receivedUser,
+      updatedAt: new Date(),
+    };
+
+    const options = {
+      method: 'PUT',
+      body: JSON.stringify(userToUpdate),
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin': API_ORIGIN,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        Authorization: receivedCredentials,
+      },
+    };
+
+    const response = await fetch(`${API_URL}/users/${receivedId}`, options);
+
+    return response;
+  } catch (error) {
+    console.log(error);
+    return new Error(`Something went wrong. Error: ${error}`);
+  }
+};
+
 const requestDeleteUser = async (id) => {
   try {
     const otpions = {
@@ -112,4 +167,5 @@ export {
   requestGetUsers,
   requestDeleteUser,
   requestCreateUser,
+  requestUpdateUser,
 };
