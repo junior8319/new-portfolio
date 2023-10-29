@@ -116,11 +116,16 @@ const ProjectsForm = () => {
         }),
       };
   
-      const registerResponse = await fetch(
+      const updateResponse = await fetch(
         `${BASE_URL}/projects/${project.id}`,
         updateOptions
       );
-      await registerResponse.json();
+      await updateResponse.json();
+
+      stopUpdating();
+
+      getProjects()
+      .then(data => setProjects(data));
       return;
     }
 
@@ -135,13 +140,14 @@ const ProjectsForm = () => {
       body: JSON.stringify(project),
     };
 
-    const registerResponse = await fetch(`${BASE_URL}/${project.id}`, updateOptions);
-    await registerResponse.json();
+    const updateResponse = await fetch(`${BASE_URL}/projects/${project.id}`, updateOptions);
+    await updateResponse.json();
 
     stopUpdating();
 
     getProjects()
     .then(data => setProjects(data));
+    return;
   };
 
 
