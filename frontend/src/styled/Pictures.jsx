@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 
 export const NormalPicture = styled.img`
-  width: 200px;
-  height: 250px;
+  width: ${props => props.$width || '200px'};
+  height: ${props => props.$width || '250px'};
   background: none;
   border-radius: 10px;
   position: relative;
   top: 0;
   right: 0;
   box-shadow: 0 0 10px rgba(0, 0, 100, 0.5);
-  margin: 10px;
+  margin: ${props => props.$margin || '10px'};
 
   @media (max-width: 1100px) {
     max-width: 125px;
