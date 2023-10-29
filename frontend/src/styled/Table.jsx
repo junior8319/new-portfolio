@@ -95,7 +95,8 @@ export const ColBtnDiv = styled.div`
 
 export const ColUpdateBtn = styled.button`
   border: none;
-  width: 50%;
+  min-width: 75px;
+  width: fit-content;
   padding: 5px;
   background-color: #bc6412;
   border-radius: 5px;
@@ -121,7 +122,8 @@ export const ColUpdateBtn = styled.button`
 
 export const ColDeleteBtn = styled.button`
   border: none;
-  width: 50%;
+  min-width: 75px;
+  width: fit-content;
   padding: 5px;
   background-color: #89250f;
   border-radius: 5px;
@@ -130,13 +132,11 @@ export const ColDeleteBtn = styled.button`
 
   @media (max-width: 1100px) {
     font-size: 0.80rem;
-    width: 100px;
     margin: auto;
   }
 
   @media (max-width: 400px) {
     font-size: 0.70rem;
-    width: 80px;
   }
 
   &:hover {
