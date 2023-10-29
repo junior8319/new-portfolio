@@ -23,8 +23,8 @@ const UsersForm = () => {
   };
 
   const stopUpdating = () => {
-    setIsUpdating(false);
     setRegisteringUser(blankForm);
+    setIsUpdating(false);
   };
 
   const sendRegisterRequest = async () => {

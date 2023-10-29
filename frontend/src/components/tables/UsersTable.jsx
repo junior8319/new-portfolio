@@ -31,6 +31,7 @@ const UsersTable = () => {
       id: tableUser.id,
       userName: tableUser.userName,
       role: tableUser.role,
+      password: '',
     });
   };
 
