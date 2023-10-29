@@ -24,13 +24,14 @@ export const ControlButton = styled.button`
 export const SaveButton = styled.input`
   border: none;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   padding: 10px;
   border-radius: 10px;
   width: fit-content;
   background-color: #13890f;
   color: #e1dbdb;
   text-align: center;
+  margin: ${props => props.$margin || '3px'};
   
   &:hover {
     background-color: #e1dbdb;
@@ -38,11 +39,11 @@ export const SaveButton = styled.input`
   }
 
   @media (max-width: 1100px) {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
 
   @media (max-width: 400px) {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
   }
 `;
 
@@ -53,24 +54,22 @@ export const CancelButton = styled.input`
   font-size: 0.8rem;
   padding: ${props => props.$padding || '10px'};
   border-radius: ${props => props.$borderRadius || '10px'};
-  width: ${props => props.$width || '150px'};
+  width: ${props => props.$width || 'fit-content'};
   background-color: #89250f;
-  color: #e1dbdb90;
-  margin: ${props => props.$margin || '0'};
+  color: #e1dbdb;
+  margin: ${props => props.$margin || '3px'};
   
   &:hover {
-    background-color: #89250f;
-    color: #e1dbdb;
+    background-color: #e1dbdb;
+    color: #89250f;
   }
 
   @media (max-width: 1100px) {
     font-size: 0.7rem;
-    width: 100px;
   }
 
   @media (max-width: 400px) {
     font-size: 0.6rem;
-    width: 80px;
   }
 `;
 
