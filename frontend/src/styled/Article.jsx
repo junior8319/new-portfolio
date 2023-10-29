@@ -16,7 +16,7 @@ const Article = styled.article`
   @media (max-width: 400px) {
     width: 95%;
     align-self: center;
-    margin: ${ props => props.$margin || 'auto' };
+    margin: ${ props => props.$margin || '5px auto' };
     max-height: ${ props => props.$maxHeight || '90%' };
     justify-self: center;
     padding: ${ props => props.$padding || '2px' };

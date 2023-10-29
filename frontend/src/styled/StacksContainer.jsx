@@ -14,7 +14,11 @@ const StacksContainer = styled.section`
   }
 
   @media (max-width: 1100px) {
-    height: 600px;
+    height: 500px;
+  }
+
+  @media (max-width: 400px) {
+    height: fit-content;
   }
 `;
 
