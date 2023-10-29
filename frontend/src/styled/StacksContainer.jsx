@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const StacksContainer = styled.section`
   width: 98%;
-  height: 750px;
+  height: 650px;
   border-radius: 10px;
   display: flex;
   flex-wrap: wrap;

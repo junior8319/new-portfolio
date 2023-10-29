@@ -6,7 +6,7 @@ const Content = styled.article`
   width: 100%;
   height: 88%;
   background-color: #ffffff15;
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0;
   margin: 0;
 
   @media (max-width: 400px) {
