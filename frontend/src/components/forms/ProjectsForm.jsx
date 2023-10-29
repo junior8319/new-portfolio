@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-import { Title2 } from '../../styled/Titles';
 import { Label } from '../../styled/Labels';
 import { Input, TextArea } from '../../styled/Inputs';
 import { CancelButton, SaveButton } from '../../styled/Buttons';
@@ -154,8 +153,6 @@ const ProjectsForm = () => {
 
   return (
     <>
-      <Title2>Cadastro de Projetos</Title2>
-
       <FormContainer
         method="post"
         encType="multipart/form-data"

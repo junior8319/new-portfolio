@@ -5,7 +5,6 @@ import { CancelButton, SaveButton } from '../../styled/Buttons';
 import { Input, TextArea } from '../../styled/Inputs';
 import { Label } from '../../styled/Labels';
 import { FormContainer, FormDiv100, FormDiv25 } from '../../styled/Form';
-import { Title2 } from '../../styled/Titles';
 
 const StacksForm = () => {
   const {
@@ -48,7 +47,6 @@ const StacksForm = () => {
 
   return (
     <>
-      <Title2>Cadastro de Habilidades e Ferramentas</Title2>
       <FormContainer action="POST">
         <FormDiv25>
           <Label htmlFor="input-title">
