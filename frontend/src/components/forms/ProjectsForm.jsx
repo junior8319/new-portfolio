@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
-import { Label } from '../../styled/Labels';
+import { Label, Span } from '../../styled/Labels';
 import { Input, TextArea } from '../../styled/Inputs';
 import { CancelButton, SaveButton } from '../../styled/Buttons';
-import { LoginContext, ProjectsContext } from '../../context/Contexts';
+import { LoginContext, ProjectsContext, StacksContext } from '../../context/Contexts';
 import { FormContainer, FormDiv100, FormDiv25 } from '../../styled/Form';
 import { getProjects } from '../../helpers/projectsApi';
+import { Title3 } from '../../styled/Titles';
 
 const ProjectsForm = () => {
   const API_ORIGIN = process.env.REACT_APP_BASE_URL_ORIGIN;
@@ -31,6 +32,8 @@ const ProjectsForm = () => {
 
   const { isAdministrator } = useContext(LoginContext);
 
+  const { stacks } = useContext(StacksContext);
+
   useEffect(() => {}, [isAdministrator]);
 
   const handleChange  = (event) => {
@@ -40,6 +43,29 @@ const ProjectsForm = () => {
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
+  };
+
+  const handleStacksSpanColor = (stack) => {
+    const stackFound = (project.stacks && project.stacks.length > 0)
+    ?
+       project.stacks
+       .find((projectStack) => projectStack.id === stack.id)
+    :
+      false;
+
+    if (stackFound) {
+      return {
+        background: '#488afa50',
+        text: '#f59a9a',
+        checked: true,
+      };
+    }
+
+    return {
+      background: '#e1dbdb50',
+      text: '#b9d6f4',
+      checked: false,
+    };
   };
 
   const sendRegisterRequest = async () => {
@@ -241,6 +267,38 @@ const ProjectsForm = () => {
             accept="image/*"
             onChange={ handleFileChange }
           />
+        </FormDiv25>
+
+        <FormDiv25>
+          <Title3>Ferramentas:</Title3>
+          <FormDiv100>
+            { stacks.map((stack) => (
+              <Span
+              key={ stack.id }
+              $backgroundColor={ handleStacksSpanColor(stack).background }
+              $color={ handleStacksSpanColor(stack).text }
+              $border="0.5px solid #ebebeb"
+              $padding="5px"
+              >
+                { stack.title }
+                { handleStacksSpanColor(stack).checked
+                  ?
+                    <Span
+                      $backgroundColor="#89250f50"
+                      $border="0.5px solid #e1dbdb"
+                      $borderRadius="40px"
+                      $padding="3px"
+                      $fontSize="0.8rem"
+                      $margin="auto 5px"
+                    >
+                      X
+                    </Span>
+                  :
+                    false
+                }
+              </Span>
+            )) }
+          </FormDiv100>
         </FormDiv25>
 
         <FormDiv100>

@@ -27,6 +27,7 @@ const ProjectsTable = () => {
       snapshot: tableProject.snapshot,
       startDate: handleDateCompatibility(tableProject.startDate),
       finishDate: handleDateCompatibility(tableProject.finishDate),
+      stacks: tableProject.Stacks,
     });
   };
 
