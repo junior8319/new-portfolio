@@ -22,6 +22,12 @@ export const Span = styled.span`
   background-color: ${props => props.$backgroundColor || 'transparent'};
   margin: ${props => props.$margin || ''};
 
+  :hover {
+    cursor: ${props => props.$cursor || 'pointer'};
+    background-color: ${props => props.$hoverBackgroundColor || '#e1dbdb80'};
+    color: ${props => props.$hoverColor || '#89250f80'};
+  }
+
   @media (max-width: 1100px) {
     font-size: 1.1rem;
   }
