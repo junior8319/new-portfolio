@@ -55,8 +55,8 @@ const ProjectsForm = () => {
 
     if (stackFound) {
       return {
-        background: '#488afa50',
-        text: '#f59a9a',
+        background: '#13890f60',
+        text: '#e1dbdb',
         checked: true,
       };
     }
@@ -67,6 +67,31 @@ const ProjectsForm = () => {
       checked: false,
     };
   };
+
+  const toggleStackOfProject = (stack) => {
+    if (!project.stacks || project.stacks.length === 0) {
+      setProject({ ...project, stacks: [stack] });
+      handleStacksSpanColor(stack);
+      return;
+    }
+
+    const stackFound = project.stacks
+    .find((projectStack) => projectStack.id === stack.id);
+
+    if (stackFound) {
+      const newStacks = project.stacks
+      .filter((projectStack) => projectStack.id !== stack.id);
+
+      setProject({ ...project, stacks: newStacks });
+      handleStacksSpanColor(stack);
+      return;
+    }
+
+    setProject({ ...project, stacks: [...project.stacks, stack] });
+    handleStacksSpanColor(stack);
+    return;
+  };
+
 
   const sendRegisterRequest = async () => {
     const formData = new FormData();
@@ -274,22 +299,21 @@ const ProjectsForm = () => {
           <FormDiv100>
             { stacks.map((stack) => (
               <Span
-              key={ stack.id }
-              $backgroundColor={ handleStacksSpanColor(stack).background }
-              $color={ handleStacksSpanColor(stack).text }
-              $border="0.5px solid #ebebeb"
-              $padding="5px"
+                key={ stack.id }
+                $backgroundColor={ handleStacksSpanColor(stack).background }
+                $color={ handleStacksSpanColor(stack).text }
+                $padding="5px"
+                onClick={ () => toggleStackOfProject(stack) }
               >
                 { stack.title }
                 { handleStacksSpanColor(stack).checked
                   ?
                     <Span
-                      $backgroundColor="#89250f50"
-                      $border="0.5px solid #e1dbdb"
+                      $backgroundColor="#89250f80"
                       $borderRadius="40px"
-                      $padding="3px"
+                      $padding="3px 6px"
                       $fontSize="0.8rem"
-                      $margin="auto 5px"
+                      $margin="auto 3px"
                     >
                       X
                     </Span>
