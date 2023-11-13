@@ -27,7 +27,6 @@ const getProjectById = async (id) => {
 
 const requestProjectRegister = async (receivedData) => {
   try {
-    console.log('receivedData', receivedData);
     const formData = new FormData();
     formData.append('title', receivedData.title);
     formData.append('snapshot', receivedData.snapshot);

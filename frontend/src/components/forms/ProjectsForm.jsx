@@ -6,6 +6,7 @@ import { LoginContext, ProjectsContext, StacksContext } from '../../context/Cont
 import { FormContainer, FormDiv100, FormDiv25 } from '../../styled/Form';
 import { getProjects } from '../../helpers/projectsApi';
 import { Title3 } from '../../styled/Titles';
+import { registerStackProjectRequest } from '../../helpers/stacksProjectsApi';
 
 const ProjectsForm = () => {
   const API_ORIGIN = process.env.REACT_APP_BASE_URL_ORIGIN;
@@ -55,8 +56,8 @@ const ProjectsForm = () => {
 
     if (stackFound) {
       return {
-        background: '#488afa50',
-        text: '#f59a9a',
+        background: '#13890f60',
+        text: '#e1dbdb',
         checked: true,
       };
     }
@@ -68,40 +69,107 @@ const ProjectsForm = () => {
     };
   };
 
-  const sendRegisterRequest = async () => {
-    const formData = new FormData();
-    formData.append('snapshot', file);
+  const toggleStackOfProject = async (stack) => {
+    if (!project.stacks || project.stacks.length === 0) {
+      await setProject({ ...project, stacks: [stack] });
+      handleStacksSpanColor(stack);
+      return;
+    }
+    
+    const stackFound = await project.stacks
+    .find((projectStack) => projectStack.id === stack.id);
 
-    const uploadOptions = {
-      method: 'POST',
-      body: formData,
-    };
+    if (stackFound) {
+      const newStacks = await project.stacks
+      .filter((projectStack) => projectStack.id !== stack.id);
 
-    const uploadResponse = await fetch(`${BASE_URL}/upload`, uploadOptions);
-    const data = await uploadResponse.json();
-
-    if (data.error || !data.file || data.file.length === 0) {
-      alert(`Erro ao enviar arquivo! ${data.error}`);
+      await setProject({ ...project, stacks: newStacks });
+      handleStacksSpanColor(stack);
       return;
     }
 
-    setProject({ ...project, snapshot: data.file.filename });
+    await setProject({ ...project, stacks: [...project.stacks, stack] });
+
+    handleStacksSpanColor(stack);
+    return;
+  };
+
+
+  const sendRegisterRequest = async () => {
+    if (file && file.name.length > 0) {
+      const formData = new FormData();
+      formData.append('snapshot', file);
+  
+      const uploadOptions = {
+        method: 'POST',
+        body: formData,
+      };
+  
+      const uploadResponse = await fetch(`${BASE_URL}/upload`, uploadOptions);
+      const data = await uploadResponse.json();
+  
+      if (data.error || !data.file || data.file.length === 0) {
+        alert(`Erro ao enviar arquivo! ${data.error}`);
+        return;
+      }
+  
+      setProject({ ...project, snapshot: data.file.filename });
+      
+      const registerOptions = {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': API_ORIGIN,
+        },
+        body: JSON.stringify({
+          ...project,
+          snapshot: data.file.filename,
+        }),
+      };
+  
+      const registerResponse = await fetch(`${BASE_URL}/projects`, registerOptions);
+      await registerResponse.json();
+  
+      stopUpdating();
+  
+      getProjects()
+      .then(data => setProjects(data));
+    }
 
     const registerOptions = {
       method: 'POST',
+      body: JSON.stringify(project),
       mode: 'cors',
       headers: {
-        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': API_ORIGIN,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
-      body: JSON.stringify({
-        ...project,
-        snapshot: data.file.filename,
-      }),
     };
 
     const registerResponse = await fetch(`${BASE_URL}/projects`, registerOptions);
-    await registerResponse.json();
+    const jsonResponse = await registerResponse.json();
+
+    if (
+      registerResponse.status === 201
+      && project.stacks
+      && project.stacks.length > 0
+    ) {
+      const projectId = jsonResponse.project.id;
+      const stacksIds = project.stacks.map((stack) => stack.id);
+
+
+      stacksIds.forEach(async (stackId) => {
+        const newStackProject = {
+          projectId,
+          stackId,
+        };
+
+        await registerStackProjectRequest(newStackProject);
+      });
+    }
+
 
     stopUpdating();
 
@@ -274,22 +342,21 @@ const ProjectsForm = () => {
           <FormDiv100>
             { stacks.map((stack) => (
               <Span
-              key={ stack.id }
-              $backgroundColor={ handleStacksSpanColor(stack).background }
-              $color={ handleStacksSpanColor(stack).text }
-              $border="0.5px solid #ebebeb"
-              $padding="5px"
+                key={ stack.id }
+                $backgroundColor={ handleStacksSpanColor(stack).background }
+                $color={ handleStacksSpanColor(stack).text }
+                $padding="5px"
+                onClick={ () => toggleStackOfProject(stack) }
               >
                 { stack.title }
                 { handleStacksSpanColor(stack).checked
                   ?
                     <Span
-                      $backgroundColor="#89250f50"
-                      $border="0.5px solid #e1dbdb"
+                      $backgroundColor="#89250f"
                       $borderRadius="40px"
-                      $padding="3px"
+                      $padding="3px 6px"
                       $fontSize="0.8rem"
-                      $margin="auto 5px"
+                      $margin="auto 3px"
                     >
                       X
                     </Span>
