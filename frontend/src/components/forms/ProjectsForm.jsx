@@ -68,26 +68,27 @@ const ProjectsForm = () => {
     };
   };
 
-  const toggleStackOfProject = (stack) => {
+  const toggleStackOfProject = async (stack) => {
     if (!project.stacks || project.stacks.length === 0) {
-      setProject({ ...project, stacks: [stack] });
+      await setProject({ ...project, stacks: [stack] });
       handleStacksSpanColor(stack);
       return;
     }
-
-    const stackFound = project.stacks
+    
+    const stackFound = await project.stacks
     .find((projectStack) => projectStack.id === stack.id);
 
     if (stackFound) {
-      const newStacks = project.stacks
+      const newStacks = await project.stacks
       .filter((projectStack) => projectStack.id !== stack.id);
 
-      setProject({ ...project, stacks: newStacks });
+      await setProject({ ...project, stacks: newStacks });
       handleStacksSpanColor(stack);
       return;
     }
 
-    setProject({ ...project, stacks: [...project.stacks, stack] });
+    await setProject({ ...project, stacks: [...project.stacks, stack] });
+
     handleStacksSpanColor(stack);
     return;
   };
@@ -309,7 +310,7 @@ const ProjectsForm = () => {
                 { handleStacksSpanColor(stack).checked
                   ?
                     <Span
-                      $backgroundColor="#89250f80"
+                      $backgroundColor="#89250f"
                       $borderRadius="40px"
                       $padding="3px 6px"
                       $fontSize="0.8rem"
