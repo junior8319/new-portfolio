@@ -4,13 +4,10 @@ import { Input, TextArea } from '../../styled/Inputs';
 import { CancelButton, SaveButton } from '../../styled/Buttons';
 import { LoginContext, ProjectsContext, StacksContext } from '../../context/Contexts';
 import { FormContainer, FormDiv100, FormDiv25 } from '../../styled/Form';
-import { getProjects, registerProject } from '../../helpers/projectsApi';
+import { getProjects, registerProject, updateProject } from '../../helpers/projectsApi';
 import { Title3 } from '../../styled/Titles';
 
 const ProjectsForm = () => {
-  const API_ORIGIN = process.env.REACT_APP_BASE_URL_ORIGIN;
-  const BASE_URL = process.env.REACT_APP_BASE_URL;
-
   const initialProject = {
     title: '',
     description: '',
@@ -116,63 +113,18 @@ const ProjectsForm = () => {
 
   const sendUpdateRequest = async () => {
     if (file && file.name.length > 0) {
-      const formData = new FormData();
-      formData.append('snapshot', file);
-
-      const uploadOptions = {
-        method: 'POST',
-        body: formData,
-      };
-
-      const uploadResponse = await fetch(`${BASE_URL}/upload`, uploadOptions);
-      const data = await uploadResponse.json();
-
-      if (data.error || !data.file || data.file.length === 0) {
-        alert(`Erro ao enviar arquivo! ${data.error}`);
-        return;
-      }
-
-      setProject({ ...project, snapshot: data.file.filename });
-  
-      const updateOptions = {
-        method: 'PUT',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': API_ORIGIN,
-        },
-        body: JSON.stringify({
-          ...project,
-          snapshot: data.file.filename,
-        }),
-      };
-  
-      const updateResponse = await fetch(
-        `${BASE_URL}/projects/${project.id}`,
-        updateOptions
-      );
-      await updateResponse.json();
+      setProject({ ...project, snapshot: file });
+      
+      const response = await updateProject({ ...project, snapshot: file });
 
       stopUpdating();
 
       getProjects()
       .then(data => setProjects(data));
-      return;
+      return response;
     }
 
-
-    const updateOptions = {
-      method: 'PUT',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': API_ORIGIN,
-      },
-      body: JSON.stringify(project),
-    };
-
-    const updateResponse = await fetch(`${BASE_URL}/projects/${project.id}`, updateOptions);
-    await updateResponse.json();
+    await updateProject(project);
 
     stopUpdating();
 
