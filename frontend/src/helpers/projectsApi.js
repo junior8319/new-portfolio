@@ -72,6 +72,25 @@ const uploadSnapshot = async (snapshot) => {
   }
 };
 
+const deleteSnapshot = async (snapshot) => {
+  const deleteFileOptions = {
+    method: 'DELETE',
+    mode: 'cors',
+    headers: {
+      'Access-Control-Allow-Origin': API_ORIGIN,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  };
+
+  const deleteFileResponse = await fetch(
+    `${API_URL}/files/delete/${snapshot}`,
+    deleteFileOptions
+  );
+
+  return deleteFileResponse;
+};
+
 const registerProject = async (receivedData) => {
   try {
     if (!receivedData.snapshot || receivedData.snapshot.length === 0) {
@@ -141,6 +160,47 @@ const requestProjectUpdate = async (receivedId, updatedProject) => {
   }
 };
 
+const updateProject = async (updatedProject) => {
+  try {
+    if (!updatedProject.snapshot || updatedProject.snapshot.length === 0) {
+      return requestProjectUpdate(updatedProject.id, updatedProject);
+    }
+
+    const projectToUpdate = await getProjectById(updatedProject.id);
+
+    const imageToDelete = await fetch(
+      `${API_URL}/images/${projectToUpdate.snapshot}`
+    );
+
+    if (imageToDelete && imageToDelete.status === 200) {
+      await deleteSnapshot(projectToUpdate.snapshot);
+    }
+
+    if (!updateProject.snapshot || updatedProject.snapshot.length === 0) {
+      return requestProjectUpdate(updatedProject.id, updatedProject);
+    }
+    
+    const formData = new FormData();
+    formData.append('snapshot', updatedProject.snapshot);
+    console.log(formData.get('snapshot'));
+
+    const snapshot  = await uploadSnapshot(formData);
+
+    const response = await requestProjectUpdate(
+      updatedProject.id,
+      {
+        ...updatedProject,
+        snapshot: snapshot.file.filename,
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.log(error);
+    return new Error(`Something went wrong. Error: ${error}`);
+  }
+};
+
 const requestProjectDelete = async (receivedId) => {
   try {
     const projectToDelete = await getProjectById(receivedId);
@@ -158,10 +218,21 @@ const requestProjectDelete = async (receivedId) => {
       },
     };
 
-    const deleteFileResponse = await fetch(
-      `${API_URL}/files/delete/${projectToDelete.snapshot}`,
+    const imageToDelete = await fetch(
+      `${API_URL}/images/${projectToDelete.snapshot}`,
       deleteFileOptions
     );
+
+    console.log(imageToDelete);
+
+    const deleteFileResponse = (imageToDelete && imageToDelete.length > 0)
+    ?
+      await fetch(
+        `${API_URL}/files/delete/${projectToDelete.snapshot}`,
+        deleteFileOptions
+      )
+    :
+      "No image to delete";
     
     const options = {
       method: 'DELETE',
@@ -190,6 +261,7 @@ export {
   getProjects,
   getProjectById,
   registerProject,
+  updateProject,
   requestProjectUpdate,
   requestProjectDelete,
 };
