@@ -1,3 +1,5 @@
+import { registerStackProjectRequest } from "./stacksProjectsApi";
+
 const API_URL = process.env.REACT_APP_BASE_URL;
 const API_ORIGIN = process.env.REACT_APP_BASE_URL_ORIGIN;
 
@@ -25,38 +27,86 @@ const getProjectById = async (id) => {
   }
 };
 
-const requestProjectRegister = async (receivedData) => {
+const registerProjectRequest = async (receivedData) => {
   try {
-    const formData = new FormData();
-    formData.append('title', receivedData.title);
-    formData.append('snapshot', receivedData.snapshot);
-    formData.append('description', receivedData.description);
-    formData.append('startDate', receivedData.startDate);
-    formData.append('finishDate', receivedData.finishDate);
-    formData.append('projectUrl', receivedData.projectUrl);
-
-    const uploadFormData = new FormData();
-    uploadFormData.append('snapshot', receivedData.snapshot);
-
     const options = {
       method: 'POST',
-      body: receivedData,
+      body: JSON.stringify(receivedData),
       mode: 'cors',
       headers: {
-        'Access-control-Allow-Origin': API_ORIGIN,
+        'Access-Control-Allow-Origin': API_ORIGIN,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     };
 
-    const uploadOptions = {
+    const response = await fetch(`${API_URL}/projects`, options);
+    const responseJson = await response.json();
+
+    return responseJson;
+  } catch (error) {
+    console.log(error);
+    return new Error(`Something went wrong. Error: ${error}`);
+  }
+};
+
+const uploadSnapshot = async (snapshot) => {
+  try {
+    const options = {
       method: 'POST',
-      body: uploadFormData,
+      body: snapshot,
     };
 
-    const uploadResponse = await fetch(`${API_URL}/upload`, uploadOptions);
-    console.log('uploadResponse', uploadResponse);
+    const response = await fetch(`${API_URL}/upload`, options);
+    const responseJson = await response.json();
 
-    const response = await fetch(`${API_URL}/projects`, options);
-    console.log(response);
+    if (responseJson.error || !responseJson.file || responseJson.file.length === 0) {
+      console.log(responseJson.error);
+      return new Error(`Unable to upload snapshot. Error: ${responseJson.error}`);
+    }
+
+    return responseJson;
+  } catch (error) {
+    console.log(error);
+    return new Error(`Something went wrong. Error: ${error}`);
+  }
+};
+
+const registerProject = async (receivedData) => {
+  try {
+    if (!receivedData.snapshot || receivedData.snapshot.length === 0) {
+      return registerProjectRequest(receivedData);
+    }
+
+    const formData = new FormData();
+    formData.append('snapshot', receivedData.snapshot);
+
+    const snapshot  = await uploadSnapshot(formData);
+
+    const response = await registerProjectRequest({
+      ...receivedData,
+      snapshot: snapshot.file.filename,
+    });
+
+    if (
+      response
+      && response.project
+      && receivedData.stacks
+      && receivedData.stacks.length > 0
+    ) {
+      const projectId = response.project.id;
+      const stacksIds = receivedData.stacks.map((stack) => stack.id);
+
+
+      stacksIds.forEach(async (stackId) => {
+        const newStackProject = {
+          projectId,
+          stackId,
+        };
+
+        await registerStackProjectRequest(newStackProject);
+      });
+    }
 
     return response;
   } catch (error) {
@@ -139,7 +189,7 @@ const requestProjectDelete = async (receivedId) => {
 export {
   getProjects,
   getProjectById,
-  requestProjectRegister,
+  registerProject,
   requestProjectUpdate,
   requestProjectDelete,
 };
