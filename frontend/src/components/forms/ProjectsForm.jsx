@@ -4,9 +4,8 @@ import { Input, TextArea } from '../../styled/Inputs';
 import { CancelButton, SaveButton } from '../../styled/Buttons';
 import { LoginContext, ProjectsContext, StacksContext } from '../../context/Contexts';
 import { FormContainer, FormDiv100, FormDiv25 } from '../../styled/Form';
-import { getProjects } from '../../helpers/projectsApi';
+import { getProjects, registerProject } from '../../helpers/projectsApi';
 import { Title3 } from '../../styled/Titles';
-import { registerStackProjectRequest } from '../../helpers/stacksProjectsApi';
 
 const ProjectsForm = () => {
   const API_ORIGIN = process.env.REACT_APP_BASE_URL_ORIGIN;
@@ -97,84 +96,22 @@ const ProjectsForm = () => {
 
   const sendRegisterRequest = async () => {
     if (file && file.name.length > 0) {
-      const formData = new FormData();
-      formData.append('snapshot', file);
-  
-      const uploadOptions = {
-        method: 'POST',
-        body: formData,
-      };
-  
-      const uploadResponse = await fetch(`${BASE_URL}/upload`, uploadOptions);
-      const data = await uploadResponse.json();
-  
-      if (data.error || !data.file || data.file.length === 0) {
-        alert(`Erro ao enviar arquivo! ${data.error}`);
-        return;
-      }
-  
-      setProject({ ...project, snapshot: data.file.filename });
-      
-      const registerOptions = {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': API_ORIGIN,
-        },
-        body: JSON.stringify({
-          ...project,
-          snapshot: data.file.filename,
-        }),
-      };
-  
-      const registerResponse = await fetch(`${BASE_URL}/projects`, registerOptions);
-      await registerResponse.json();
-  
+      const response = await registerProject({ ...project, snapshot: file });
       stopUpdating();
-  
+
       getProjects()
       .then(data => setProjects(data));
+
+      return response;
     }
 
-    const registerOptions = {
-      method: 'POST',
-      body: JSON.stringify(project),
-      mode: 'cors',
-      headers: {
-        'Access-Control-Allow-Origin': API_ORIGIN,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    };
-
-    const registerResponse = await fetch(`${BASE_URL}/projects`, registerOptions);
-    const jsonResponse = await registerResponse.json();
-
-    if (
-      registerResponse.status === 201
-      && project.stacks
-      && project.stacks.length > 0
-    ) {
-      const projectId = jsonResponse.project.id;
-      const stacksIds = project.stacks.map((stack) => stack.id);
-
-
-      stacksIds.forEach(async (stackId) => {
-        const newStackProject = {
-          projectId,
-          stackId,
-        };
-
-        await registerStackProjectRequest(newStackProject);
-      });
-    }
-
-
+    const response = await registerProject(project);
     stopUpdating();
 
     getProjects()
     .then(data => setProjects(data));
+
+    return response;
   };
 
   const sendUpdateRequest = async () => {
