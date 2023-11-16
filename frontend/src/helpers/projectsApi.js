@@ -1,4 +1,4 @@
-import { registerStackProjectRequest } from "./stacksProjectsApi";
+import { deleteStackProjectRequest, getStackProjectByPKRequest, registerStackProjectRequest } from "./stacksProjectsApi";
 
 const API_URL = process.env.REACT_APP_BASE_URL;
 const API_ORIGIN = process.env.REACT_APP_BASE_URL_ORIGIN;
@@ -91,6 +91,62 @@ const deleteSnapshot = async (snapshot) => {
   return deleteFileResponse;
 };
 
+const associateStacksToProject = async (projectId, stacks) => {
+  const stacksIds = stacks.map((stack) => stack.id);
+
+  stacksIds.forEach(async (stackId) => {
+    const stackProject = await getStackProjectByPKRequest(stackId, projectId);
+    if (!stackProject.stackId || !stackProject.projectId) {
+      const newStackProject = {
+        projectId,
+        stackId,
+      };
+
+      await registerStackProjectRequest(newStackProject);
+    }
+  });
+};
+
+const dissociateStacksFromProject = async (projectId, stacks) => {
+  const stacksIds = stacks.map((stack) => stack.id);
+
+  const responses = stacksIds.map(async (stackId) => {
+    const stackProject = await getStackProjectByPKRequest(stackId, projectId);
+
+    if (stackProject.stackId && stackProject.projectId) {
+      const deleteResponse = await
+        deleteStackProjectRequest(stackId, projectId);
+      return deleteResponse;
+    }
+  });
+
+  return responses;
+};
+
+const setStacksProjectsToAssociate = async (updatedStacks, toUpdateStacks) => {
+  const stacksToAssociate = updatedStacks.filter((stack) => {
+    const stackToUpdate = toUpdateStacks.find((toUpdateStack) => {
+      return stack.id === toUpdateStack.id;
+    });
+
+    return !stackToUpdate;
+  });
+
+  return stacksToAssociate;
+};
+
+const setStacksProjectsToDissociate = async (updatedStacks, toUpdateStacks) => {
+  const stacksToDissociate = toUpdateStacks.filter((stack) => {
+    const stackToUpdate = updatedStacks.find((updatedStack) => {
+      return stack.id === updatedStack.id;
+    });
+
+    return !stackToUpdate;
+  });
+
+  return stacksToDissociate;
+};
+
 const registerProject = async (receivedData) => {
   try {
     if (!receivedData.snapshot || receivedData.snapshot.length === 0) {
@@ -114,17 +170,7 @@ const registerProject = async (receivedData) => {
       && receivedData.stacks.length > 0
     ) {
       const projectId = response.project.id;
-      const stacksIds = receivedData.stacks.map((stack) => stack.id);
-
-
-      stacksIds.forEach(async (stackId) => {
-        const newStackProject = {
-          projectId,
-          stackId,
-        };
-
-        await registerStackProjectRequest(newStackProject);
-      });
+      await associateStacksToProject(projectId, receivedData.stacks);
     }
 
     return response;
@@ -137,6 +183,20 @@ const registerProject = async (receivedData) => {
 const requestProjectUpdate = async (receivedId, updatedProject) => {
   try {
     const projectToUpdate = await getProjectById(receivedId);
+    
+    const stacksToAssociate = await setStacksProjectsToAssociate(
+      updatedProject.stacks,
+      projectToUpdate.Stacks
+    );
+    
+    const stacksToDissociate = await setStacksProjectsToDissociate(
+      updatedProject.stacks,
+      projectToUpdate.Stacks
+    );
+
+    await associateStacksToProject(receivedId, stacksToAssociate);
+    await dissociateStacksFromProject(receivedId, stacksToDissociate);
+    
     if (!projectToUpdate) {
       return `Não foi possível encontrar projeto com o ID: ${receivedId}`;
     }
@@ -165,24 +225,29 @@ const updateProject = async (updatedProject) => {
     if (!updatedProject.snapshot || updatedProject.snapshot.length === 0) {
       return requestProjectUpdate(updatedProject.id, updatedProject);
     }
-
+    
     const projectToUpdate = await getProjectById(updatedProject.id);
-
+    
     const imageToDelete = await fetch(
       `${API_URL}/images/${projectToUpdate.snapshot}`
     );
-
-    if (imageToDelete && imageToDelete.status === 200) {
-      await deleteSnapshot(projectToUpdate.snapshot);
+    
+    if (
+          imageToDelete
+          && imageToDelete.status === 200
+          && projectToUpdate.snapshot !== updatedProject.snapshot
+      ) {
+          const formData = new FormData();
+          formData.append('snapshot', updatedProject.snapshot);
+          await deleteSnapshot(projectToUpdate.snapshot);
     }
-
-    if (!updateProject.snapshot || updatedProject.snapshot.length === 0) {
+    
+    if (!updatedProject.snapshot || updatedProject.snapshot.length === 0) {
       return requestProjectUpdate(updatedProject.id, updatedProject);
     }
     
     const formData = new FormData();
     formData.append('snapshot', updatedProject.snapshot);
-    console.log(formData.get('snapshot'));
 
     const snapshot  = await uploadSnapshot(formData);
 
@@ -222,8 +287,6 @@ const requestProjectDelete = async (receivedId) => {
       `${API_URL}/images/${projectToDelete.snapshot}`,
       deleteFileOptions
     );
-
-    console.log(imageToDelete);
 
     const deleteFileResponse = (imageToDelete && imageToDelete.length > 0)
     ?
