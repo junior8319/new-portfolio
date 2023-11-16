@@ -13,6 +13,20 @@ export const getStacksProjectsRequest = async () => {
   }
 };
 
+export const getStackProjectByPKRequest = async (stackId, projectId) => {
+  try {
+    const stackProject = await fetch(
+      `${API_URL}/stacks-projects/${stackId}/${projectId}`
+    );
+    const jsonStackProject = await stackProject.json();
+
+    return jsonStackProject;
+  } catch (error) {
+    console.log(error);
+    return new Error(`Something went wrong. Error: ${error}`);
+  }
+};
+
 export const registerStackProjectRequest = async (receivedData) => {
   try {
     const response = await fetch(`${API_URL}/stacks-projects`, {
@@ -25,6 +39,28 @@ export const registerStackProjectRequest = async (receivedData) => {
         'Accept': 'application/json',
       },
     });
+
+    return response;
+  } catch (error) {
+    console.log(error);
+    return new Error(`Something went wrong. Error: ${error}`);
+  }
+};
+
+export const deleteStackProjectRequest = async (stackId, projectId) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/stacks-projects/${stackId}/${projectId}`,
+      {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+          'Access-control-Allow-Origin': API_ORIGIN,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      }
+    );
 
     return response;
   } catch (error) {

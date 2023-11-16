@@ -113,8 +113,6 @@ const ProjectsForm = () => {
 
   const sendUpdateRequest = async () => {
     if (file && file.name.length > 0) {
-      setProject({ ...project, snapshot: file });
-      
       const response = await updateProject({ ...project, snapshot: file });
 
       stopUpdating();
