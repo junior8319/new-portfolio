@@ -20,16 +20,9 @@ const ProjectsComponent = () => {
 
   const API_BASE = process.env.REACT_APP_BASE_URL;
 
-  if (!projects || projects.length === 0) {
-    return (
-      <Article>
-        <Loading />
-      </Article>
-    );
-  }
-
   return (
-    projects.map((project) => {
+    (projects && projects.length)
+    ? projects.map((project) => {
       return (
       <Article
         key={project.id}
@@ -138,6 +131,11 @@ const ProjectsComponent = () => {
         </Article>
       </Article>
     )})
+    : (
+      <Article>
+        <Loading />
+      </Article>
+    )
   );
 };
 
