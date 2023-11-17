@@ -71,7 +71,7 @@ const ProjectsForm = () => {
       handleStacksSpanColor(stack);
       return;
     }
-    
+
     const stackFound = await project.stacks
     .find((projectStack) => projectStack.id === stack.id);
 
@@ -122,7 +122,7 @@ const ProjectsForm = () => {
       return response;
     }
 
-    await updateProject(project);
+    await updateProject({ ...project, snapshot: '' });
 
     stopUpdating();
 

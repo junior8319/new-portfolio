@@ -183,12 +183,12 @@ const registerProject = async (receivedData) => {
 const requestProjectUpdate = async (receivedId, updatedProject) => {
   try {
     const projectToUpdate = await getProjectById(receivedId);
-    
+
     const stacksToAssociate = await setStacksProjectsToAssociate(
       updatedProject.stacks,
       projectToUpdate.Stacks
     );
-    
+
     const stacksToDissociate = await setStacksProjectsToDissociate(
       updatedProject.stacks,
       projectToUpdate.Stacks
@@ -196,7 +196,7 @@ const requestProjectUpdate = async (receivedId, updatedProject) => {
 
     await associateStacksToProject(receivedId, stacksToAssociate);
     await dissociateStacksFromProject(receivedId, stacksToDissociate);
-    
+
     if (!projectToUpdate) {
       return `Não foi possível encontrar projeto com o ID: ${receivedId}`;
     }
@@ -222,16 +222,17 @@ const requestProjectUpdate = async (receivedId, updatedProject) => {
 
 const updateProject = async (updatedProject) => {
   try {
+    const projectToUpdate = await getProjectById(updatedProject.id);
+
     if (!updatedProject.snapshot || updatedProject.snapshot.length === 0) {
+      updatedProject.snapshot = projectToUpdate.snapshot;
       return requestProjectUpdate(updatedProject.id, updatedProject);
     }
-    
-    const projectToUpdate = await getProjectById(updatedProject.id);
-    
+
     const imageToDelete = await fetch(
       `${API_URL}/images/${projectToUpdate.snapshot}`
     );
-    
+
     if (
           imageToDelete
           && imageToDelete.status === 200
@@ -241,11 +242,7 @@ const updateProject = async (updatedProject) => {
           formData.append('snapshot', updatedProject.snapshot);
           await deleteSnapshot(projectToUpdate.snapshot);
     }
-    
-    if (!updatedProject.snapshot || updatedProject.snapshot.length === 0) {
-      return requestProjectUpdate(updatedProject.id, updatedProject);
-    }
-    
+
     const formData = new FormData();
     formData.append('snapshot', updatedProject.snapshot);
 
@@ -273,30 +270,12 @@ const requestProjectDelete = async (receivedId) => {
       return `Não foi possível encontrar projeto com o ID: ${receivedId}`;
     }
 
-    const deleteFileOptions = {
-      method: 'DELETE',
-      mode: 'cors',
-      headers: {
-        'Access-Control-Allow-Origin': API_ORIGIN,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    };
-
-    const imageToDelete = await fetch(
-      `${API_URL}/images/${projectToDelete.snapshot}`,
-      deleteFileOptions
-    );
-
-    const deleteFileResponse = (imageToDelete && imageToDelete.length > 0)
+    const deleteFileResponse = (projectToDelete.snapshot && projectToDelete.snapshot.length > 0)
     ?
-      await fetch(
-        `${API_URL}/files/delete/${projectToDelete.snapshot}`,
-        deleteFileOptions
-      )
+      await deleteSnapshot(projectToDelete.snapshot)
     :
       "No image to delete";
-    
+
     const options = {
       method: 'DELETE',
       mode: 'cors',
@@ -312,7 +291,7 @@ const requestProjectDelete = async (receivedId) => {
       file: deleteFileResponse,
       project: deleteProjectResponse
     };
-    
+
     return response;
   } catch (error) {
     console.log(error);
