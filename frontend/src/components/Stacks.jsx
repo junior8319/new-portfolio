@@ -15,21 +15,19 @@ const Stacks = () => {
 
   useEffect(() => {}, [stacks]);
 
-  if (!stacks || stacks.length === 0) {
-    return (
+  return (
+    (stacks && stacks.length)
+    ?
+      <Article
+        $maxHeight="fit-content"
+      >
+        <Title1>Ferramentas que conheço:</Title1>
+        <Carousel cards={ stacks } intervalTime={ 30000 } />
+      </Article>
+    :
       <Article>
         <Loading />
       </Article>
-    );
-  }
-
-  return (
-    <Article
-      $maxHeight="fit-content"
-    >
-      <Title1>Ferramentas que conheço:</Title1>
-      <Carousel cards={ stacks } intervalTime={ 30000 } />
-    </Article>
   );
 };
 
