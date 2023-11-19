@@ -12,6 +12,8 @@ const generateToken = async (user) => {
   return token;
 };
 
+console.log('secretKey', secretKey);
+
 const verifyToken = (token) => {
   const decoded = jwt.verify(token, secretKey);
 
