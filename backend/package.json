@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon ./app/api/server.js",
-    "build": "npm run dev",
-    "prebuild": "npm install && npm run db:reset",
+    "prestart": "npm run build",
+    "build": "npm run db:reset",
+    "prebuild": "npm install",
     "dev": "nodemon ./app/api/server.js",
     "db:reset": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
     "db:create": "npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
