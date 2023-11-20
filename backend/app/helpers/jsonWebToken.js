@@ -12,7 +12,7 @@ const generateToken = async (user) => {
   return token;
 };
 
-console.log('secretKey', secretKey);
+console.log('SECRET KEY', secretKey);
 
 const verifyToken = (token) => {
   const decoded = jwt.verify(token, secretKey);
