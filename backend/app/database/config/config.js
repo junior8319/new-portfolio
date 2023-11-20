@@ -1,4 +1,7 @@
 require('dotenv').config();
+console.log('MYSQLDATABASE', process.env.MYSQLDATABASE);
+console.log('MYSQLUSER', process.env.MYSQLUSER);
+console.log('MYSQLPASSWORD', process.env.MYSQLPASSWORD);
 
 module.exports = {
   development: {
