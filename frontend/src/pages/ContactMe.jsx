@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from '../components/NavBar';
 import Container from '../styled/Container';
 import { FormContainer, FormDiv100 } from '../styled/Form';
 import { Label, Span } from '../styled/Labels';
