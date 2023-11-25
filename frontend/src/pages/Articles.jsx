@@ -1,5 +1,4 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
 import Container from '../styled/Container';
 import BuildingComp from '../components/BuildingComp';
 import image from '../assets/images/handyman.jpg';
@@ -7,7 +6,6 @@ import image from '../assets/images/handyman.jpg';
 const Articles = () => {
   return (
     <>
-      <NavBar />
       <Container
         $height="90vh"
       >

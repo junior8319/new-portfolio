@@ -17,6 +17,7 @@ const LoginProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdministrator, setIsAdministrator] = useState(false);
   const [token, setToken] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const getUsersFromApi = async () => {
     const data = await requestGetUsers();
@@ -32,11 +33,6 @@ const LoginProvider = ({ children }) => {
       setUser(user);
       setToken(token);
       setIsLogged(true);
-      (user.role === 'owner')
-      ?
-        setIsAdministrator(true)
-      :
-        setIsAdministrator(false);
     }
 
     requestGetUsers()
@@ -62,11 +58,14 @@ const LoginProvider = ({ children }) => {
     setIsUpdating,
     setRegisteringUser,
     isAdministrator,
+    setIsAdministrator,
     token,
     setToken,
+    loginError,
+    setLoginError,
     getUsersFromApi,
   }
-  
+
   return (
     <LoginContext.Provider value={contextValue}>
       {children}
