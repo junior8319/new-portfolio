@@ -10,7 +10,6 @@ import picture from './assets/images/my_photo.jpeg';
 function App() {
   return (
     <div>
-      <NavBar />
       <Container>
         <NormalPicture src={ picture } alt="" />
         <Welcome />

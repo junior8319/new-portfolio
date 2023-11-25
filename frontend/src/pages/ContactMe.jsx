@@ -58,7 +58,7 @@ const ContactMe = () => {
 
   const monitorSendingStatus = (status) => {
     if (status.length === 0) return '';
-    
+
     if (status === 'OK') {
       return 'Obrigado pelo seu contato, retornarei em breve.';
     } else {
@@ -68,17 +68,17 @@ const ContactMe = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
     setErrorsObj(
       validateToEnableSubmission(
         errorsObj,
         messageObj,
       )
     );
-  
+
     if (submissionEnabled) {
       setIsSending(true);
-      
+
       sendEmail(messageObj)
       .then((response) => setSendingStatus(response))
       .catch((response) => setSendingStatus(response))
@@ -102,10 +102,9 @@ const ContactMe = () => {
     :
       enableSubmission(true)
   }, [errorsObj, messageObj, sendingStatus]);
- 
+
   return (
     <>
-      <NavBar />
       <Container>
         <Article
           $maxHeight={ 'fit-content' }

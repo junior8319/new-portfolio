@@ -10,11 +10,13 @@ import Articles from './pages/Articles';
 import Administrator from './pages/Administrator';
 import StacksProvider from './context/StacksProvider';
 import LoginProvider from './context/LoginProvider';
+import NavBar from './components/NavBar';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <GlobalStyle />
+    <NavBar />
     <Routes>
       <Route path="/" element={ <App /> }/>
 
@@ -31,7 +33,7 @@ root.render(
           </StacksProvider>
         </LoginProvider>}
       />
-      
+
       <Route path="*" element={ <div>404</div> } />
     </Routes>
   </BrowserRouter>

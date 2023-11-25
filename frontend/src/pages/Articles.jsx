@@ -7,7 +7,6 @@ import image from '../assets/images/handyman.jpg';
 const Articles = () => {
   return (
     <>
-      <NavBar />
       <Container
         $height="90vh"
       >

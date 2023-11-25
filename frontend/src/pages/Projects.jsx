@@ -8,7 +8,6 @@ import Article from '../styled/Article';
 const Projects = () => {
   return (
     <>
-      <NavBar />
       <Container>
         <Article
           $width={ '100%' }
