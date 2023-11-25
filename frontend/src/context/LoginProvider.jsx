@@ -32,11 +32,6 @@ const LoginProvider = ({ children }) => {
       setUser(user);
       setToken(token);
       setIsLogged(true);
-      (user.role === 'owner')
-      ?
-        setIsAdministrator(true)
-      :
-        setIsAdministrator(false);
     }
 
     requestGetUsers()
@@ -62,11 +57,12 @@ const LoginProvider = ({ children }) => {
     setIsUpdating,
     setRegisteringUser,
     isAdministrator,
+    setIsAdministrator,
     token,
     setToken,
     getUsersFromApi,
   }
-  
+
   return (
     <LoginContext.Provider value={contextValue}>
       {children}
