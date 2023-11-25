@@ -12,14 +12,14 @@ const requestLogin = async (receivedCredencials) => {
         'Access-Control-Allow-Origin': API_ORIGIN,
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-      }, 
+      },
     };
-  
+
     const response = fetch(`${API_URL}/users/login`, options)
     .then(response => response.json())
     .then(data => data);
-  
-    return response;  
+
+    return response;
   } catch (error) {
     console.log(error);
     return new Error(`Something went wrong. Error: ${error}`);
@@ -35,11 +35,11 @@ const requestGetUsers = async () => {
         'Access-Control-Allow-Origin': API_ORIGIN,
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-      }, 
+      },
     };
 
     const response = await fetch(`${API_URL}/users`, options);
-    const jsonResponse = await response.json();    
+    const jsonResponse = await response.json();
 
     return jsonResponse;
   } catch (error) {
@@ -57,11 +57,11 @@ const requestGetUserById = async (receivedId) => {
         'Access-Control-Allow-Origin': API_ORIGIN,
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-      }, 
+      },
     };
 
     const user = await fetch(`${API_URL}/users/${receivedId}`, options);
-    const jsonUser = await user.json();    
+    const jsonUser = await user.json();
 
     return jsonUser;
   } catch (error) {
@@ -77,7 +77,7 @@ const requestCreateUser = async (receivedUser, receivedCredentials) => {
       created_at: new Date(),
       updated_at: new Date(),
     };
-  
+
     const registerOptions = {
       method: 'POST',
       mode: 'cors',
@@ -89,15 +89,15 @@ const requestCreateUser = async (receivedUser, receivedCredentials) => {
       },
       body: JSON.stringify(userToRegister),
     };
-  
+
     const registerResponse = await fetch(
       `${API_URL}/users/create`,
       registerOptions
     );
-  
+
     const jsonResponse = await registerResponse.json();
 
-    return jsonResponse;    
+    return jsonResponse;
   } catch (error) {
     console.log(error);
     return new Error(`Something went wrong. Error: ${error}`);
@@ -147,7 +147,7 @@ const requestDeleteUser = async (id) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': TOKEN,
-      }, 
+      },
     };
 
     const response = await fetch(`${API_URL}/users/${id}`, otpions);
