@@ -1,5 +1,5 @@
 const userValidate = async (request, response, next) => {
-  console.log(request.body);
+  console.log('USER VALIDATION MIDDLEWARE', request.body);
   const { userName, password, role } = request.body;
 
 
