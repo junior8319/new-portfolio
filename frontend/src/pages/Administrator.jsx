@@ -1,4 +1,4 @@
-import React,{ useContext } from 'react';
+import React,{ useContext, useEffect } from 'react';
 import StacksForm from '../components/forms/StacksForm';
 import StacksTable from '../components/tables/StacksTable';
 import Article from '../styled/Article';
@@ -14,7 +14,20 @@ import UsersForm from '../components/forms/UsersForm';
 import UsersTable from '../components/tables/UsersTable';
 
 const Administrator = () => {
-  const { user, isLogged } = useContext(LoginContext);
+  const { user, isLogged, isAdministrator, setIsAdministrator } = useContext(LoginContext);
+
+  useEffect(() => {
+    const userInStorage = JSON.parse(localStorage.getItem('user'));
+    const tokenInStorage = JSON.parse(localStorage.getItem('token'));
+
+    if (userInStorage) {
+      setIsAdministrator(userInStorage.role === 'owner');
+    }
+
+    if (!userInStorage || !isLogged) {
+      setIsAdministrator(false);
+    }
+  }, [user, isLogged, isAdministrator, setIsAdministrator]);
 
   if (!user || user.userName.length === 0 || !isLogged) {
     return (
