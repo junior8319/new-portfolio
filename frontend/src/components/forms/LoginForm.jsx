@@ -7,9 +7,16 @@ import { SaveButton } from "../../styled/Buttons";
 import { LoginContainer } from '../../styled/Container';
 import { requestLogin } from "../../helpers/loginApi";
 import { LoginContext } from "../../context/Contexts";
+import { SimpleP } from "../../styled/Paragraphs";
 
 const LoginForm = () => {
-  const { setIsLogged, user, setUser } = useContext(LoginContext);
+  const {
+    setIsLogged,
+    user,
+    setUser,
+    loginError,
+    setLoginError,
+  } = useContext(LoginContext);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -20,11 +27,27 @@ const LoginForm = () => {
     event.preventDefault();
     const response = await requestLogin(user);
 
+    if (response && response.message) {
+      setLoginError(response.message);
+      return;
+    }
+
+    if (!response.userData || !response.token) {
+      setLoginError('Invalid fields');
+      setUser({
+        ...user,
+        userName: '',
+        password: '',
+      });
+      return;
+    }
+
     if (response) {
       setIsLogged(true);
       localStorage.setItem('user', JSON.stringify(response.userData));
       localStorage.setItem('token', JSON.stringify(response.token));
       setUser(response.userData);
+      setLoginError('');
       return response;
     }
   };
@@ -34,21 +57,37 @@ const LoginForm = () => {
       userName: 'user',
       password: 'userSuper',
     };
-    
-    const promise = new Promise((resolve, reject) => {
+
+    const promise = new Promise((resolve) => {
       resolve(requestLogin(user));
     });
+
     const response = promise.then((response) => {
+      if (response && response.message) {
+        setLoginError(response.message);
+        return;
+      }
+
+      if (!response.userData || !response.token) {
+        setLoginError('Invalid fields');
+        setUser({
+          ...user,
+          userName: '',
+          password: '',
+        });
+        return;
+      }
+
       localStorage.setItem('user', JSON.stringify(response.userData));
       localStorage.setItem('token', JSON.stringify(response.token));
+
+      setLoginError('');
       setIsLogged(true);
       setUser(response.userData);
       return response;
     });
 
-    if (response) {
-      return response;
-    }
+    return response;
   };
 
   return (
@@ -87,6 +126,13 @@ const LoginForm = () => {
             onChange={ handleChange }
           />
         </FormDiv100>
+
+        { (loginError && loginError === 'Invalid fields') &&
+          <SimpleP $color={'#f59a9a'}>
+            Dados incorretos, favor verificar seu nome de usuário(a) e/ou
+            digitar novamente a sua senha.
+          </SimpleP>
+        }
 
         <FormDiv100>
           <SaveButton
