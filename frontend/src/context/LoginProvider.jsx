@@ -17,6 +17,7 @@ const LoginProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isAdministrator, setIsAdministrator] = useState(false);
   const [token, setToken] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const getUsersFromApi = async () => {
     const data = await requestGetUsers();
@@ -60,6 +61,8 @@ const LoginProvider = ({ children }) => {
     setIsAdministrator,
     token,
     setToken,
+    loginError,
+    setLoginError,
     getUsersFromApi,
   }
 
